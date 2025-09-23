@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Recibo de Parqueadero</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      font-size: 12px;
+      font-weight: bold;
+      color: #000000;
+      margin: 0;
+      padding: 0;
+    }
+    .recibo {
+      width: 58mm;
+      padding: 10px;
+      margin: auto;
+    }
+    .titulo {
+      text-align: center;
+      margin-bottom: 5px;
+    }
+    .item {
+      margin-bottom: 5px;
+    }
+    .linea {
+      border-top: 1px dashed #000;
+      margin: 10px 0;
+    }
+    .imagen-container {
+      text-align: center;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+    .imagen-container img {
+      max-width: 100%;
+      height: auto;
+      display: none; /* Se oculta por defecto y JS la muestra si existe */
+    }
+    .pie {
+      font-size: 13px; /* Más pequeño para que quepa */
+      text-align: justify;
+      margin-top: 10px;
+    }
+    .pie strong {
+      display: block;
+      text-align: center;
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body onload="cargarDatos(); window.print();">
+
+  <div class="recibo">
+    <div class="titulo" style="font-size:40px;">Global Parking</div>
+    <div class="titulo">PARQUEADERO</div>
+    <div class="titulo">DIR: Carrera 8 No 15 66</div>
+    <div class="titulo">TELEFONO: 3058875447</div>
+    <div class="titulo">🕑 Horario de atención
+Lun a Sáb: 7:00 am – 7:00 pm
+Domingos: 8:00 am – 2:00 pm
+</div>
+    <div class="titulo">--------------------------------------------------</div>
+
+    <div class="item"><span class="label">Recibo:</span> <span id="norecibo"></span></div>
+    <div class="item"><span class="label">Placa:</span> <span id="placa"></span></div>    
+    <div class="item"><span class="label">Ingreso:</span> <span id="ingreso"></span></div> 
+    <div class="item"><span class="label">Salida:</span> <span id="salida"></span></div> 
+    <div class="item"><span class="label">Precio:</span> <span id="preciohora"></span></div>
+    
+    <div class="imagen-container">
+      <img id="imagenRecibo" src="" alt="Imagen del recibo">
+    </div>
+
+    <div class="linea"></div>
+<div class="pie">
+  <strong>AVISO IMPORTANTE</strong> 1 No respondemos por objetos dejados en la moto.
+  <div>2 Solo respondemos por pérdida de cascos entregados en custodia.</div>
+  <div>3 Para retirar tu moto presenta este tiquet..</div>
+</div>
+<div class="pie">
+  <strong>Estimado cliente,
+La mensualidad del parqueadero para moto corresponde a $60.000.
+
+💳 Formas de pago:
+	•	Nequi: 305 887 5447
+	•	Bancolombia (Ahorros): 81046841450
+	•	Efectivo: directamente en el establecimiento.
+
+🔔 Si realiza el pago por transferencia, por favor enviar el comprobante al WhatsApp:
+👉 [Enlace directo a WhatsApp]
+
+✅ Gracias por confiar en Global Parking,✨ “Protegemos lo que ruedas y lo que llevas.”</div>
+</div>
+      
+
+
+ 
+  </div>
+  </div>
+  </div>
+
+  <script>
+    function cargarDatos() {
+      // Este script toma los parámetros de la URL que le envía AppSheet.
+      const params = new URLSearchParams(window.location.search);
+
+      document.getElementById("norecibo").textContent = params.get("norecibo") || "";
+      document.getElementById("placa").textContent = params.get("placa") || "";      
+      document.getElementById("ingreso").textContent = params.get("ingreso") || "";      
+      document.getElementById("preciohora").textContent = params.get("preciohora") || "";
+      
+      // La clave está aquí: 'imagenRuta' debe ser una URL completa y válida.
+      // AppSheet debe generar esta URL usando la fórmula GETIMAGEURL() en la acción.
+      const imagenRuta = params.get("imagen") || "";
+      const imagenElement = document.getElementById("imagenRecibo");
+
+      // Si AppSheet envía una ruta de imagen válida, este código la mostrará.
+      if (imagenRuta) {
+        imagenElement.src = imagenRuta;
+        imagenElement.style.display = 'block';
+      } else {
+        imagenElement.style.display = 'none';
+      }
+    }
+  </script>
+
+</body>
+</html>
