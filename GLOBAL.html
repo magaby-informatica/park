@@ -57,36 +57,41 @@
     <div class="titulo">PARQUEADERO</div>
     <div class="titulo">DIR: Carrera 8 No 15 66</div>
     <div class="titulo">TELEFONO: 3058875447</div>
-    <div class="titulo">🕑 Horario de atención
-Lun a Sáb: 7:00 am – 7:00 pm
-Domingos: 8:00 am – 2:00 pm
-</div>
+    <div class="titulo">🕑 Horario de atención<br>Lun a Sáb: 7:00 am – 7:00 pm<br>Domingos: 8:00 am – 2:00 pm</div>
     <div class="titulo">--------------------------------------------------</div>
 
+    <!-- Sección de Parqueo -->
     <div class="item"><span class="label">Recibo:</span> <span id="norecibo"></span></div>
-    <div class="item"><span class="label">Placa:</span> <span id="placa"></span></div>    
-    <div class="item"><span class="label">Ingreso:</span> <span id="ingreso"></span></div> 
-    <div class="item"><span class="label">Salida:</span> <span id="salida"></span></div> 
-    <div class="item"><span class="label">Precio:</span> <span id="preciohora"></span></div>
+    <div class="item"><span class="label">Placa:</span> <span id="placa"></span></div>
+    <div class="item"><span class="label">Ingreso:</span> <span id="ingreso"></span></div>
+    <div class="item"><span class="label">Salida:</span> <span id="salida"></span></div>
+    <div class="item"><span class="label">Precio Parqueo:</span> <span id="precio_parqueo"></span></div>
+    
+    <div class="titulo">--------------------------------------------------</div>
+    
+    <!-- Sección de Paquete -->
+    <div class="item"><span class="label">Paquete:</span> <span id="paquete"></span></div>
+    <div class="item"><span class="label">Cantidad:</span> <span id="cantidad"></span></div>
+    <div class="item"><span class="label">Tamaño:</span> <span id="tpaquete"></span></div>
+    <div class="item"><span class="label">Descripcion:</span> <span id="descripcion"></span></div>
+    <div class="item"><span class="label">Precio Paquete:</span> <span id="precio_paquete"></span></div>
+    
+    <div class="titulo">--------------------------------------------------</div>
+    
+    <!-- Sección de Total -->
+    <div class="item"><span class="label"><strong>Total:</strong></span> <span id="total"></span></div>
     
     <div class="imagen-container">
       <img id="imagenRecibo" src="" alt="Imagen del recibo">
     </div>
 
     <div class="linea"></div>
-<div class="pie">
-  <strong>AVISO IMPORTANTE</strong> 1 No respondemos por objetos dejados en la moto.
-  <div>2 Solo respondemos por pérdida de cascos entregados en custodia.</div>
-  <div>3 Para retirar tu moto presenta este tiquet..</div>
-</div>
-<div class="pie">
- 
-      
-
-
- 
-  </div>
-  </div>
+    <div class="pie">
+      <strong>AVISO IMPORTANTE</strong>
+      <div>1. No respondemos por objetos dejados en la moto.</div>
+      <div>2. Solo respondemos por pérdida de cascos entregados en custodia.</div>
+      <div>3. Para retirar tu moto presenta este tiquet.</div>
+    </div>
   </div>
 
   <script>
@@ -94,12 +99,26 @@ Domingos: 8:00 am – 2:00 pm
       // Este script toma los parámetros de la URL que le envía AppSheet.
       const params = new URLSearchParams(window.location.search);
 
+      // Poblar datos de parqueo
       document.getElementById("norecibo").textContent = params.get("norecibo") || "";
-      document.getElementById("placa").textContent = params.get("placa") || "";      
-      document.getElementById("ingreso").textContent = params.get("ingreso") || "";      
-      document.getElementById("preciohora").textContent = params.get("preciohora") || "";
+      document.getElementById("placa").textContent = params.get("placa") || "";
+      document.getElementById("ingreso").textContent = params.get("ingreso") || "";
+      document.getElementById("salida").textContent = params.get("salida") || "";
+      // Corregido: ID único para el precio del parqueo
+      document.getElementById("precio_parqueo").textContent = params.get("precio_parqueo") || "";
       
-      // La clave está aquí: 'imagenRuta' debe ser una URL completa y válida.
+      // Poblar datos del paquete
+      document.getElementById("paquete").textContent = params.get("paquete") || "";
+      document.getElementById("cantidad").textContent = params.get("cantidad") || "";
+      document.getElementById("tpaquete").textContent = params.get("tpaquete") || "";
+      document.getElementById("descripcion").textContent = params.get("descripcion") || "";
+      // Corregido: ID único para el precio del paquete
+      document.getElementById("precio_paquete").textContent = params.get("precio_paquete") || "";
+
+      // Poblar el total
+      document.getElementById("total").textContent = params.get("total") || "";
+
+      // La clave está aquí: 'imagen' debe ser una URL completa y válida.
       // AppSheet debe generar esta URL usando la fórmula GETIMAGEURL() en la acción.
       const imagenRuta = params.get("imagen") || "";
       const imagenElement = document.getElementById("imagenRecibo");
