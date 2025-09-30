@@ -65,7 +65,7 @@
     <div class="item"><span class="label">Placa:</span> <span id="placa"></span></div>
     <div class="item"><span class="label">Ingreso:</span> <span id="ingreso"></span></div>
     <div class="item"><span class="label">Salida:</span> <span id="salida"></span></div>
-    <div class="item"><span class="label">Precio Parqueo:</span> <span id="precio_parqueo"></span></div>
+    <div class="item"><span class="label">Precio:</span> <span id="precio"></span></div>
     
     <div class="titulo">--------------------------------------------------</div>
     
@@ -74,12 +74,12 @@
     <div class="item"><span class="label">Cantidad:</span> <span id="cantidad"></span></div>
     <div class="item"><span class="label">Tamaño:</span> <span id="tpaquete"></span></div>
     <div class="item"><span class="label">Descripcion:</span> <span id="descripcion"></span></div>
-    <div class="item"><span class="label">Precio Paquete:</span> <span id="precio_paquete"></span></div>
+    <div class="item"><span class="label">Pprecio:</span> <span id="precio"></span></div>
     
     <div class="titulo">--------------------------------------------------</div>
     
     <!-- Sección de Total -->
-    <div class="item"><span class="label"><strong>Total:</strong></span> <span id="total"></span></div>
+    <div class="item"><span class="label"><strong>Total:</strong></span> <span id="Total"></span></div>
     
     <div class="imagen-container">
       <img id="imagenRecibo" src="" alt="Imagen del recibo">
@@ -96,34 +96,33 @@
 
   <script>
     function cargarDatos() {
-      // Este script toma los parámetros de la URL que le envía AppSheet.
       const params = new URLSearchParams(window.location.search);
-
-      // Poblar datos de parqueo
+      
       document.getElementById("norecibo").textContent = params.get("norecibo") || "";
       document.getElementById("placa").textContent = params.get("placa") || "";
       document.getElementById("ingreso").textContent = params.get("ingreso") || "";
       document.getElementById("salida").textContent = params.get("salida") || "";
-      // Corregido: ID único para el precio del parqueo
-      document.getElementById("precio_parqueo").textContent = params.get("precio_parqueo") || "";
       
-      // Poblar datos del paquete
+      // Para manejar los dos campos con id="precio", los seleccionamos por orden
+      const precios = document.querySelectorAll("#precio");
+      if (precios.length > 0) {
+        precios[0].textContent = params.get("precio_parqueo") || ""; // El primer 'precio'
+      }
+      if (precios.length > 1) {
+        precios[1].textContent = params.get("precio_paquete") || ""; // El segundo 'precio'
+      }
+
       document.getElementById("paquete").textContent = params.get("paquete") || "";
       document.getElementById("cantidad").textContent = params.get("cantidad") || "";
       document.getElementById("tpaquete").textContent = params.get("tpaquete") || "";
       document.getElementById("descripcion").textContent = params.get("descripcion") || "";
-      // Corregido: ID único para el precio del paquete
-      document.getElementById("precio_paquete").textContent = params.get("precio_paquete") || "";
+      
+      // Usamos el id "Total" original con mayúscula
+      document.getElementById("Total").textContent = params.get("total") || "";
 
-      // Poblar el total
-      document.getElementById("total").textContent = params.get("total") || "";
-
-      // La clave está aquí: 'imagen' debe ser una URL completa y válida.
-      // AppSheet debe generar esta URL usando la fórmula GETIMAGEURL() en la acción.
       const imagenRuta = params.get("imagen") || "";
       const imagenElement = document.getElementById("imagenRecibo");
 
-      // Si AppSheet envía una ruta de imagen válida, este código la mostrará.
       if (imagenRuta) {
         imagenElement.src = imagenRuta;
         imagenElement.style.display = 'block';
@@ -135,3 +134,4 @@
 
 </body>
 </html>
+
