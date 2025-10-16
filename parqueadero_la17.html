@@ -116,15 +116,7 @@
     <div class="item"><span class="label">Ingreso:</span> <span id="ingreso"></span></div>
     <div class="item"><span class="label">Salida:</span> <span id="salida"></span></div>
     <div class="item"><span class="label">Precio:</span> <span id="precio"></span></div>
-    
-    <div class="titulo">--------------------------------------------------</div>
-    
-    <!-- Sección de Paquete -->
-    <div class="item"><span class="label">Paquete:</span> <span id="paquete"></span></div>
-    <div class="item"><span class="label">Cantidad:</span> <span id="cantidad"></span></div>
-    <div class="item"><span class="label">Tamaño:</span> <span id="tpaquete"></span></div>
-    <div class="item"><span class="label">Descripcion:</span> <span id="descripcion"></span></div>
-    <div class="item"><span class="label">Pprecio:</span> <span id="precio"></span></div>
+   
     
     <div class="titulo">--------------------------------------------------</div>
     
@@ -186,93 +178,4 @@
 </body>
 </html>
 
-      margin-bottom: 5px;
-    }
-  </style>
-</head>
-<body onload="cargarDatos(); window.print();">
-
-  <div class="recibo">
-    <div class="titulo" style="font-size:30px;">PARQUEADERO LA 17</div>
-    <div class="titulo">PARQUEADERO LA 17 </div>
-    <div class="titulo">DIR: CALLE 17 No 7 52</div>
-    <div class="titulo">TELEFONO: 3058875447</div>
-    <div class="titulo">🕑 Horario de atención<br>Lun a Sáb: 7:00 am – 7:00 pm<br>Domingos: 8:00 am – 2:00 pm</div>
-    <div class="titulo">--------------------------------------------------</div>
-
-    <!-- Sección de Parqueo -->
-    <div class="item"><span class="label">Recibo:</span> <span id="norecibo"></span></div>
-    <div class="item"><span class="label">Placa:</span> <span id="placa"></span></div>
-    <div class="item"><span class="label">Referencia:</span> <span id="referencia"></span></div>
-    <div class="item"><span class="label">Ingreso:</span> <span id="ingreso"></span></div>
-    <div class="item"><span class="label">Salida:</span> <span id="salida"></span></div>
-    <div class="item"><span class="label">Precio:</span> <span id="precio"></span></div>
-    
-    <div class="titulo">--------------------------------------------------</div>
-    
-    <!-- Sección de Paquete -->
-    <div class="item"><span class="label">Paquete:</span> <span id="paquete"></span></div>
-    <div class="item"><span class="label">Cantidad:</span> <span id="cantidad"></span></div>
-    <div class="item"><span class="label">Tamaño:</span> <span id="tpaquete"></span></div>
-    <div class="item"><span class="label">Descripcion:</span> <span id="descripcion"></span></div>
-    <div class="item"><span class="label">Pprecio:</span> <span id="precio"></span></div>
-    
-    <div class="titulo">--------------------------------------------------</div>
-    
-    <!-- Sección de Total -->
-    <div class="item"><span class="label"><strong>Total:</strong></span> <span id="Total"></span></div>
-    
-    <div class="imagen-container">
-      <img id="imagenRecibo" src="" alt="Imagen del recibo">
-    </div>
-
-    <div class="linea"></div>
-    <div class="pie">
-      <strong>AVISO IMPORTANTE</strong>
-      <div>1. No respondemos por objetos dejados en la moto.</div>
-      <div>2. Solo respondemos por pérdida de cascos entregados en custodia.</div>
-      <div>3. Para retirar tu moto presenta este tiquet.</div>
-    </div>
-  </div>
-
-  <script>
-    function cargarDatos() {
-      const params = new URLSearchParams(window.location.search);
-      
-      document.getElementById("norecibo").textContent = params.get("norecibo") || "";
-      document.getElementById("placa").textContent = params.get("placa") || "";
-      document.getElementById("referencia").textContent = params.get("referencia") || "";
-      document.getElementById("ingreso").textContent = params.get("ingreso") || "";
-      document.getElementById("salida").textContent = params.get("salida") || "";
-      
-      // Para manejar los dos campos con id="precio", los seleccionamos por orden
-      const precios = document.querySelectorAll("#precio");
-      if (precios.length > 0) {
-        precios[0].textContent = params.get("precio_parqueo") || ""; // El primer 'precio'
-      }
-      if (precios.length > 1) {
-        precios[1].textContent = params.get("precio_paquete") || ""; // El segundo 'precio'
-      }
-
-      document.getElementById("paquete").textContent = params.get("paquete") || "";
-      document.getElementById("cantidad").textContent = params.get("cantidad") || "";
-      document.getElementById("tpaquete").textContent = params.get("tpaquete") || "";
-      document.getElementById("descripcion").textContent = params.get("descripcion") || "";
-      
-      // Usamos el id "Total" original con mayúscula
-      document.getElementById("Total").textContent = params.get("total") || "";
-
-      const imagenRuta = params.get("imagen") || "";
-      const imagenElement = document.getElementById("imagenRecibo");
-
-      if (imagenRuta) {
-        imagenElement.src = imagenRuta;
-        imagenElement.style.display = 'block';
-      } else {
-        imagenElement.style.display = 'none';
-      }
-    }
-  </script>
-
-</body>
-</html>
+     
