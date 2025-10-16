@@ -1,52 +1,3 @@
-
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <title>Recibo de Parqueadero</title>
-  <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      font-size: 12px;
-      font-weight: bold;
-      color: #000000;
-      margin: 0;
-      padding: 0;
-    }
-    .recibo {
-      width: 58mm;
-      padding: 10px;
-      margin: auto;
-    }
-    .titulo {
-      text-align: center;
-      margin-bottom: 5px;
-    }
-    .item {
-      margin-bottom: 5px;
-    }
-    .linea {
-      border-top: 1px dashed #000;
-      margin: 10px 0;
-    }
-    .imagen-container {
-      text-align: center;
-      margin-top: 10px;
-      margin-bottom: 10px;
-    }
-    .imagen-container img {
-      max-width: 100%;
-      height: auto;
-      display: none; /* Se oculta por defecto y JS la muestra si existe */
-    }
-    .pie {
-      font-size: 13px; /* Más pequeño para que quepa */
-      text-align: justify;
-      margin-top: 10px;
-    }
-    .pie strong {
-      display: block;
-      text-align: center
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -99,10 +50,10 @@
     }
   </style>
 </head>
-<body onload="cargarDatos(); window.print();">
+<body onload="cargarDatosYImprimir()">
 
   <div class="recibo">
-    <div class="titulo" style="font-size:23px;">PARQUEADERO LA 17</div>
+    <div class="titulo" style="font-size:27px;">PARQUEADERO LA 17</div>
     <div class="titulo">PARQUEADERO LA 17 </div>
     <div class="titulo">DIR: CALLE 17 No 7 52</div>
     <div class="titulo">TELEFONO: 3058875447</div>
@@ -116,7 +67,7 @@
     <div class="item"><span class="label">Ingreso:</span> <span id="ingreso"></span></div>
     <div class="item"><span class="label">Salida:</span> <span id="salida"></span></div>
     <div class="item"><span class="label">Precio:</span> <span id="precio"></span></div>
-   
+    
     
     <div class="titulo">--------------------------------------------------</div>
     
@@ -137,45 +88,48 @@
   </div>
 
   <script>
-    function cargarDatos() {
+    function cargarDatosYImprimir() {
       const params = new URLSearchParams(window.location.search);
       
-      document.getElementById("norecibo").textContent = params.get("norecibo") || "";
-      document.getElementById("placa").textContent = params.get("placa") || "";
-      document.getElementById("referencia").textContent = params.get("referencia") || "";
-      document.getElementById("ingreso").textContent = params.get("ingreso") || "";
-      document.getElementById("salida").textContent = params.get("salida") || "";
-      
-      // Para manejar los dos campos con id="precio", los seleccionamos por orden
-      const precios = document.querySelectorAll("#precio");
-      if (precios.length > 0) {
-        precios[0].textContent = params.get("precio_parqueo") || ""; // El primer 'precio'
-      }
-      if (precios.length > 1) {
-        precios[1].textContent = params.get("precio_paquete") || ""; // El segundo 'precio'
-      }
+      // Función auxiliar para asignar texto a un elemento de forma segura
+      const setText = (id, value) => {
+        const element = document.getElementById(id);
+        if (element) {
+          element.textContent = value || "";
+        }
+      };
 
-      document.getElementById("paquete").textContent = params.get("paquete") || "";
-      document.getElementById("cantidad").textContent = params.get("cantidad") || "";
-      document.getElementById("tpaquete").textContent = params.get("tpaquete") || "";
-      document.getElementById("descripcion").textContent = params.get("descripcion") || "";
+      setText("norecibo", params.get("norecibo"));
+      setText("placa", params.get("placa"));
+      setText("referencia", params.get("referencia"));
+      setText("ingreso", params.get("ingreso"));
+      setText("salida", params.get("salida"));
+      setText("precio", params.get("precio_parqueo"));
+      setText("Total", params.get("total"));
       
-      // Usamos el id "Total" original con mayúscula
-      document.getElementById("Total").textContent = params.get("total") || "";
+      // El resto de los campos que tenías en tu script original.
+      // Si los elementos no existen en el HTML, simplemente no hará nada y no dará error.
+      setText("paquete", params.get("paquete"));
+      setText("cantidad", params.get("cantidad"));
+      setText("tpaquete", params.get("tpaquete"));
+      setText("descripcion", params.get("descripcion"));
 
       const imagenRuta = params.get("imagen") || "";
       const imagenElement = document.getElementById("imagenRecibo");
 
-      if (imagenRuta) {
-        imagenElement.src = imagenRuta;
-        imagenElement.style.display = 'block';
-      } else {
-        imagenElement.style.display = 'none';
+      if (imagenElement) {
+        if (imagenRuta) {
+          imagenElement.src = imagenRuta;
+          imagenElement.style.display = 'block';
+        } else {
+          imagenElement.style.display = 'none';
+        }
       }
+      
+      // Se llama a la función de imprimir después de cargar todos los datos
+      window.print();
     }
   </script>
 
 </body>
 </html>
-
-     
