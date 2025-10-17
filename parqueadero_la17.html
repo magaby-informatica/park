@@ -6,7 +6,7 @@
   <style>
     body {
       font-family: 'Arial', sans-serif;
-      font-size: 12px;
+      font-size: 14px; /* Aumentado para mejor legibilidad */
       font-weight: bold;
       color: #000000;
       margin: 0;
@@ -14,12 +14,13 @@
     }
     .recibo {
       width: 58mm;
-      padding: 10px;
+      padding: 5px; /* Reducido para dar más espacio al contenido */
       margin: auto;
+      box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
     }
     .titulo {
       text-align: center;
-      margin-bottom: 1px;
+      margin-bottom: 2px; /* Reducido para juntar las líneas del encabezado */
     }
     .item {
       margin-bottom: 5px;
@@ -40,7 +41,7 @@
       display: none; /* Se oculta por defecto y JS la muestra si existe */
     }
     .pie {
-      font-size: 13px; /* Más pequeño para que quepa */
+      font-size: 14px; /* Ajustado al tamaño del cuerpo */
       text-align: center; /* Centrado */
       margin-top: 10px;
     }
@@ -54,7 +55,7 @@
 <body onload="cargarDatosYImprimir()">
 
   <div class="recibo">
-    <div class="titulo" style="font-size:27px;">PARQUEADERO LA 17</div>
+    <div class="titulo" style="font-size:22px;">PARQUEADERO LA 17</div>
     <div class="titulo">PARQUEADERO LA 17 </div>
     <div class="titulo">DIR: CALLE 17 No 7 52</div>
     <div class="titulo">TELEFONO: 3058875447</div>
@@ -62,10 +63,7 @@
     <div class="titulo">--------------------------------------------------</div>
 
     <!-- Sección de Parqueo -->
-    <div class="item"><span class="label">Recibo:</span> <span id="norecibo"></span></div>
-    <div class="item"><span class="label">Placa:</span> <span id="placa"></span></div>
-    <div class="item"><span class="label">Referencia:</span> <span id="referencia"></span></div>
-    <div class="item"><span class="label">Ingreso:</span> <span id="ingreso"></span></div>
+    <div class="item"><span class="label">Recibo:</span> <span id="noreci<div class="item"><span class="label">Ingreso:</span> <span id="ingreso"></span></div>
     <div class="item"><span class="label">Salida:</span> <span id="salida"></span></div>
     <div class="item"><span class="label">Precio:</span> <span id="precio"></span></div>
     
