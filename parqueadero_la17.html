@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Recibo de Parqueadero</title>
   <style>
     body {
@@ -63,7 +64,15 @@
     <div class="titulo">--------------------------------------------------</div>
 
     <!-- Sección de Parqueo -->
-    <div class="item"><span class="label">Recibo:</span> <span id="noreci<div class="item"><span class="label">Ingreso:</span> <span id="ingreso"></span></div>
+    <!-- CORRECCIÓN: Esta línea estaba rota y el ID estaba incompleto -->
+    <div class="item"><span class="label">Recibo:</span> <span id="norecibo"></span></div>
+    
+    <!-- AÑADIDO: Estos campos faltaban en el HTML -->
+    <div class="item"><span class="label">Placa:</span> <span id="placa"></span></div>
+    <div class="item"><span class="label">Referencia:</span> <span id="referencia"></span></div>
+    
+    <!-- Esta línea estaba mezclada con la de "Recibo" -->
+    <div class="item"><span class="label">Ingreso:</span> <span id="ingreso"></span></div>
     <div class="item"><span class="label">Salida:</span> <span id="salida"></span></div>
     <div class="item"><span class="label">Precio:</span> <span id="precio"></span></div>
     
@@ -94,10 +103,11 @@
       const setText = (id, value) => {
         const element = document.getElementById(id);
         if (element) {
-          element.textContent = value || "";
+          element.textContent = value || ""; // Si el valor es null o undefined, pone ""
         }
       };
 
+      // Asignar datos a los elementos
       setText("norecibo", params.get("norecibo"));
       setText("placa", params.get("placa"));
       setText("referencia", params.get("referencia"));
@@ -126,10 +136,12 @@
       }
       
       // Se llama a la función de imprimir después de cargar todos los datos
-      window.print();
+      // Espera un breve momento para que el DOM se actualice antes de imprimir
+      setTimeout(() => {
+        window.print();
+      }, 100); // 100ms de espera
     }
   </script>
 
 </body>
 </html>
-
