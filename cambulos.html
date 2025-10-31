@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recibo de Parqueadero</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      font-size: 14px; /* Aumentado para mejor legibilidad */
+      font-weight: bold;
+      color: #000000;
+      margin: 0;
+      padding: 0;
+    }
+    .recibo {
+      width: 58mm;
+      padding: 5px; /* Reducido para dar más espacio al contenido */
+      margin: auto;
+      box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
+    }
+    .titulo {
+      text-align: center;
+      margin-bottom: 2px; /* Reducido para juntar las líneas del encabezado */
+    }
+    .item {
+      margin-bottom: 5px;
+      text-align: center; /* Centrado */
+    }
+    .linea {
+      border-top: 1px dashed #000;
+      margin: 10px 0;
+    }
+    .imagen-container {
+      text-align: center;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+    .imagen-container img {
+      max-width: 100%;
+      height: auto;
+      display: none; /* Se oculta por defecto y JS la muestra si existe */
+    }
+    .pie {
+      font-size: 14px; /* Ajustado al tamaño del cuerpo */
+      text-align: center; /* Centrado */
+      margin-top: 10px;
+    }
+    .pie strong {
+      display: block;
+      text-align: center;
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body onload="cargarDatosYImprimir()">
+
+  <div class="recibo">
+    <div class="titulo" style="font-size:22px;">PARQUEADERO LA 17</div>
+    <div class="titulo">PARQUEADERO LOS CAMBULOS </div>
+    <div class="titulo">DIR: CALLE 9 No 39 42 </div>
+    <div class="titulo">TELEFONO: 3206145130</div>
+    <div class="titulo">🕑 Horario de atención<br>Lun a Sáb: 6:00 am – 6:00 pm</div>
+    <div class="titulo">--------------------------------------------------</div>
+
+    <!-- Sección de Parqueo -->
+    <!-- CORRECCIÓN: Esta línea estaba rota y el ID estaba incompleto -->
+    <div class="item"><span class="label">Recibo:</span> <span id="norecibo"></span></div>
+    
+    <!-- AÑADIDO: Estos campos faltaban en el HTML -->
+    <div class="item"><span class="label">Placa:</span> <span id="placa"></span></div>
+        <!-- Esta línea estaba mezclada con la de "Recibo" -->
+    <div class="item"><span class="label">Ingreso:</span> <span id="ingreso"></span></div>
+    <div class="item"><span class="label">Salida:</span> <span id="salida"></span></div>
+    <div class="item"><span class="label">Precio:</span> <span id="precio"></span></div>
+    
+    
+    <div class="titulo">--------------------------------------------------</div>
+    
+    <!-- Sección de Total -->
+    <div class="item"><span class="label"><strong>Total:</strong></span> <span id="Total"></span></div>
+    
+    <div class="imagen-container">
+      <img id="imagenRecibo" src="" alt="Imagen del recibo">
+    </div>
+
+    <div class="linea"></div>
+    <div class="pie">
+      <strong>AVISO IMPORTANTE</strong>
+      <div>1. No respondemos por objetos dejados en la moto.</div>
+           <div>2. Para retirar tu moto presenta este tiquet.</div>
+    </div>
+  </div>
+
+  <script>
+    function cargarDatosYImprimir() {
+      const params = new URLSearchParams(window.location.search);
+      
+      // Función auxiliar para asignar texto a un elemento de forma segura
+      const setText = (id, value) => {
+        const element = document.getElementById(id);
+        if (element) {
+          element.textContent = value || ""; // Si el valor es null o undefined, pone ""
+        }
+      };
+
+      // Asignar datos a los elementos
+      setText("norecibo", params.get("norecibo"));
+      setText("placa", params.get("placa"));
+      setText("referencia", params.get("referencia"));
+      setText("ingreso", params.get("ingreso"));
+      setText("salida", params.get("salida"));
+      setText("precio", params.get("precio_parqueo"));
+      setText("Total", params.get("total"));
+      
+      // El resto de los campos que tenías en tu script original.
+      // Si los elementos no existen en el HTML, simplemente no hará nada y no dará error.
+      setText("paquete", params.get("paquete"));
+      setText("cantidad", params.get("cantidad"));
+      setText("tpaquete", params.get("tpaquete"));
+      setText("descripcion", params.get("descripcion"));
+
+      const imagenRuta = params.get("imagen") || "";
+      const imagenElement = document.getElementById("imagenRecibo");
+
+      if (imagenElement) {
+        if (imagenRuta) {
+          imagenElement.src = imagenRuta;
+          imagenElement.style.display = 'block';
+        } else {
+          imagenElement.style.display = 'none';
+        }
+      }
+      
+      // Se llama a la función de imprimir después de cargar todos los datos
+      // Espera un breve momento para que el DOM se actualice antes de imprimir
+      setTimeout(() => {
+        window.print();
+      }, 100); // 100ms de espera
+    }
+  </script>
+
+</body>
+</html>
