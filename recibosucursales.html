@@ -12,44 +12,7 @@
       color: #000000;
       margin: 0;
       padding: 0;
-    }
-    .recibo {
-      width: 58mm;
-      padding: 5px;
-      margin: auto;
-      box-sizing: border-box;
-    }
-    .titulo {
       text-align: center;
-      margin-bottom: 2px;
-    }
-    .item {
-      margin-bottom: 5px;
-      text-align: center;
-    }
-    .linea {
-      border-top: 1px dashed #000;
-      margin: 10px 0;
-    }
-    .imagen-container {
-      text-align: center;
-      margin-top: 10px;
-      margin-bottom: 10px;
-    }
-    .imagen-container img {
-      max-width: 100%;
-      height: auto;
-      display: none;
-    }
-    .pie {
-      font-size: 14px;
-      text-align: center;
-      margin-top: 10px;
-    }
-    .pie strong {
-      display: block;
-      text-align: center;
-      margin-bottom: 5px;
     }
 
     @media print {
@@ -59,21 +22,71 @@
         width: 58mm;
       }
     }
+
+    .recibo {
+      width: 58mm;
+      padding: 5px;
+      margin: 0 auto;
+      box-sizing: border-box;
+      text-align: center;
+    }
+
+    .titulo {
+      text-align: center;
+      margin-bottom: 2px;
+    }
+
+    .item {
+      margin-bottom: 5px;
+      text-align: center;
+    }
+
+    .linea {
+      border-top: 1px dashed #000;
+      margin: 10px 0;
+    }
+
+    .imagen-container {
+      text-align: center;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+
+    .imagen-container img {
+      max-width: 100%;
+      height: auto;
+      display: none;
+    }
+
+    .pie {
+      font-size: 14px;
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .pie strong {
+      display: block;
+      text-align: center;
+      margin-bottom: 5px;
+    }
   </style>
 </head>
 <body onload="cargarDatosYImprimir()">
 
   <div class="recibo">
-    <!-- Encabezado dinámico -->
+
+    <!-- ✅ Encabezado corregido -->
     <div class="titulo" style="font-size:22px;">PARQUEADERO</div>
     <div class="titulo" id="nombreSucursal"></div>
     <div class="titulo" id="direccionSucursal"></div>
     <div class="titulo" id="telefonoSucursal"></div>
 
-    <div class="titulo">🕑 Horario de atención<br>Lun a Sáb: 7:00 am – 7:00 pm<br>Domingos: 8:00 am – 2:00 pm</div>
+    <div class="titulo">🕑 Horario de atención<br>
+      Lun a Sáb: 7:00 am – 7:00 pm<br>
+      Domingos: 8:00 am – 2:00 pm
+    </div>
     <div class="titulo">--------------------------------------------------</div>
 
-    <!-- Sección de Parqueo -->
     <div class="item"><span class="label">Recibo:</span> <span id="norecibo"></span></div>
     <div class="item"><span class="label">Placa:</span> <span id="placa"></span></div>
     <div class="item"><span class="label">Referencia:</span> <span id="referencia"></span></div>
@@ -102,26 +115,22 @@
     function cargarDatosYImprimir() {
       const params = new URLSearchParams(window.location.search);
 
+      // Función auxiliar
       const setText = (id, value) => {
         const el = document.getElementById(id);
         if (el) el.textContent = value || "";
       };
 
-      // Encabezado dinámico
+      // ✅ Datos dinámicos del encabezado
       const nombre = params.get("sucursalp");
       const direccion = params.get("dirsucur");
       const telefono = params.get("phone");
 
-      if (nombre) setText("nombreSucursal", nombre);
-      else setText("nombreSucursal", ""); // vacío si no llega
+      setText("nombreSucursal", nombre ? "PARQUEADERO " + nombre : "");
+      setText("direccionSucursal", direccion ? "DIR: " + direccion : "");
+      setText("telefonoSucursal", telefono ? "TELÉFONO: " + telefono : "");
 
-      if (direccion) setText("direccionSucursal", "DIR: " + direccion);
-      else setText("direccionSucursal", "");
-
-      if (telefono) setText("telefonoSucursal", "TELÉFONO: " + telefono);
-      else setText("telefonoSucursal", "");
-
-      // Datos del recibo
+      // ✅ Otros datos
       setText("norecibo", params.get("norecibo"));
       setText("placa", params.get("placa"));
       setText("referencia", params.get("referencia"));
@@ -130,14 +139,15 @@
       setText("precio", params.get("precio_parqueo"));
       setText("Total", params.get("total"));
 
-      // Imagen opcional
       const imagenRuta = params.get("imagen") || "";
-      const imagenElement = document.getElementById("imagenRecibo");
-      if (imagenRuta) {
-        imagenElement.src = imagenRuta;
-        imagenElement.style.display = 'block';
-      } else {
-        imagenElement.style.display = 'none';
+      const img = document.getElementById("imagenRecibo");
+      if (img) {
+        if (imagenRuta) {
+          img.src = imagenRuta;
+          img.style.display = "block";
+        } else {
+          img.style.display = "none";
+        }
       }
 
       setTimeout(() => window.print(), 100);
