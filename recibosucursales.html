@@ -52,7 +52,6 @@
       margin-bottom: 5px;
     }
 
-    /* Mantiene centrado en impresión */
     @media print {
       body {
         margin: 0;
@@ -65,11 +64,11 @@
 <body onload="cargarDatosYImprimir()">
 
   <div class="recibo">
-    <!-- Mantiene el mismo formato, pero con datos dinámicos -->
+    <!-- Encabezado dinámico -->
     <div class="titulo" style="font-size:22px;">PARQUEADERO</div>
-    <div class="titulo"><span id="nombreSucursal">LA 17</span></div>
-    <div class="titulo">DIR: <span id="direccionSucursal">CALLE 17 No 7 52</span></div>
-    <div class="titulo">TELEFONO: <span id="telefonoSucursal">3058875447</span></div>
+    <div class="titulo" id="nombreSucursal"></div>
+    <div class="titulo" id="direccionSucursal"></div>
+    <div class="titulo" id="telefonoSucursal"></div>
 
     <div class="titulo">🕑 Horario de atención<br>Lun a Sáb: 7:00 am – 7:00 pm<br>Domingos: 8:00 am – 2:00 pm</div>
     <div class="titulo">--------------------------------------------------</div>
@@ -102,16 +101,25 @@
   <script>
     function cargarDatosYImprimir() {
       const params = new URLSearchParams(window.location.search);
-      
+
       const setText = (id, value) => {
         const el = document.getElementById(id);
         if (el) el.textContent = value || "";
       };
 
       // Encabezado dinámico
-      setText("nombreSucursal", params.get("sucursalp"));
-      setText("direccionSucursal", params.get("dirsucur"));
-      setText("telefonoSucursal", params.get("phone"));
+      const nombre = params.get("sucursalp");
+      const direccion = params.get("dirsucur");
+      const telefono = params.get("phone");
+
+      if (nombre) setText("nombreSucursal", nombre);
+      else setText("nombreSucursal", ""); // vacío si no llega
+
+      if (direccion) setText("direccionSucursal", "DIR: " + direccion);
+      else setText("direccionSucursal", "");
+
+      if (telefono) setText("telefonoSucursal", "TELÉFONO: " + telefono);
+      else setText("telefonoSucursal", "");
 
       // Datos del recibo
       setText("norecibo", params.get("norecibo"));
@@ -122,25 +130,16 @@
       setText("precio", params.get("precio_parqueo"));
       setText("Total", params.get("total"));
 
-      // Campos extra (compatibilidad)
-      setText("paquete", params.get("paquete"));
-      setText("cantidad", params.get("cantidad"));
-      setText("tpaquete", params.get("tpaquete"));
-      setText("descripcion", params.get("descripcion"));
-
-      // Imagen
+      // Imagen opcional
       const imagenRuta = params.get("imagen") || "";
       const imagenElement = document.getElementById("imagenRecibo");
-      if (imagenElement) {
-        if (imagenRuta) {
-          imagenElement.src = imagenRuta;
-          imagenElement.style.display = 'block';
-        } else {
-          imagenElement.style.display = 'none';
-        }
+      if (imagenRuta) {
+        imagenElement.src = imagenRuta;
+        imagenElement.style.display = 'block';
+      } else {
+        imagenElement.style.display = 'none';
       }
 
-      // Imprimir tras un pequeño retardo
       setTimeout(() => window.print(), 100);
     }
   </script>
