@@ -95,7 +95,7 @@
 
     <div class="titulo">--------------------------------------------------</div>
 
-    <div class="item"><span class="label"><strong>Total:</strong></span> <span id="valor"></span></div>
+    <div class="item"><span class="label"><strong>Total:</strong></span> <span id="total"></span></div>
 
     <div class="imagen-container">
       <img id="imagenRecibo" src="" alt="Imagen del recibo">
@@ -134,8 +134,7 @@
       setText("Etiqueta", params.get("etiqueta"));
            setText("ingreso", params.get("ingreso"));
       setText("salida", params.get("salida"));
-      setText("precio", params.get("precio_parqueo"));
-      setText("Total", params.get("valor"));
+          setText("Total", params.get("valor"));
 
       const imagenRuta = params.get("imagen") || "";
       const img = document.getElementById("imagenRecibo");
