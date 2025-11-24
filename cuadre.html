@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cierre Caja Térmico</title>
+    <style>
+        /* CSS PARA IMPRESORA TÉRMICA 58MM */
+        body { margin: 0; padding: 0; font-family: 'Courier New', Courier, monospace; background-color: #ffffff; font-size: 12px; color: black; }
+        .ticket { width: 100%; max-width: 54mm; background-color: white; margin: 0 auto; padding-bottom: 20px; }
+        h2 { font-size: 14px; font-weight: bold; text-align: center; margin: 10px 0 5px 0; text-transform: uppercase; }
+        h3 { font-size: 12px; font-weight: bold; text-align: left; margin: 10px 0 2px 0; text-transform: uppercase; border-bottom: 1px solid black; }
+        p { margin: 2px 0; }
+        .center { text-align: center; }
+        .right { text-align: right; }
+        .bold { font-weight: bold; }
+        .divider { border-top: 1px dashed #000; margin: 5px 0; width: 100%; }
+        table { width: 100%; border-collapse: collapse; }
+        td { padding: 2px 0; vertical-align: top; }
+        .col-concept { width: 65%; text-align: left; }
+        .col-price { width: 35%; text-align: right; }
+        .row-detail td { font-size: 11px; color: #444; padding-left: 5px; }
+        .total-row { font-size: 14px; font-weight: bold; border-top: 2px solid black; padding-top: 5px; margin-top: 5px; }
+        
+        /* Botón de imprimir (se oculta al imprimir) */
+        .no-print { text-align: center; padding: 10px; background: #eee; margin-bottom: 10px; }
+        @media print { .no-print { display: none; } body { background-color: white; } }
+    </style>
+</head>
+<body>
+
+    <div class="no-print">
+        <button onclick="window.print()" style="padding:10px; width:100%; font-size:16px;">🖨️ IMPRIMIR</button>
+    </div>
+
+    <div class="ticket">
+        
+        <h2>REPORTE DE CIERRE</h2>
+        <p class="center">Sucursal: <strong id="sucursal"></strong></p>
+        <div class="divider"></div>
+        <p><strong>Fecha:</strong> <span id="fecha"></span></p>
+        <p><strong>Usuario:</strong> <span id="usuario"></span></p>
+        <p><strong>ID Cierre:</strong> #<span id="consecutivo"></span></p>
+        <div class="divider"></div>
+
+        <h3>INGRESOS</h3>
+        <table>
+            <tbody>
+                <tr><td class="col-concept">Parqueo <small>(Cnt: <span id="cnt_parque"></span>)</small></td><td class="col-price" id="total_parque"></td></tr>
+                <tr><td class="col-concept">Carritos <small>(Cnt: <span id="cnt_carritos"></span>)</small></td><td class="col-price" id="total_carritos"></td></tr>
+                <tr><td class="col-concept">Mensualidad <small>(Cnt: <span id="cnt_mensual"></span>)</small></td><td class="col-price" id="total_mensual"></td></tr>
+                <tr><td class="col-concept">Bodegas <small>(Cnt: <span id="cnt_bodegas"></span>)</small></td><td class="col-price" id="total_bodegas"></td></tr>
+                <tr><td class="col-concept">Baños <small>(Cnt: <span id="cnt_banio"></span>)</small></td><td class="col-price" id="total_banio"></td></tr>
+            </tbody>
+        </table>
+
+        <div class="divider"></div>
+
+        <h3>DETALLE EGRESOS</h3>
+        <table id="tabla_gastos"></table>
+        <table>
+            <tr style="border-top: 1px solid #ccc;">
+                <td class="col-concept bold">TOTAL GASTOS:</td>
+                <td class="col-price bold" id="total_gastos"></td>
+            </tr>
+        </table>
+
+        <h3>TRANSACCIONES</h3>
+        <table id="tabla_bancos"></table>
+        <table>
+            <tr style="border-top: 1px solid #ccc;">
+                <td class="col-concept bold">TOTAL TRANSAC.:</td>
+                <td class="col-price bold" id="total_transacciones"></td>
+            </tr>
+        </table>
+
+        <div class="divider"></div>
+
+        <table>
+            <tr class="total-row">
+                <td class="col-concept">TOTAL SISTEMA:</td>
+                <td class="col-price" id="total_sistema"></td>
+            </tr>
+            <tr>
+                <td class="col-concept">(-) Transacciones:</td>
+                <td class="col-price" id="total_transacciones_resta"></td>
+            </tr>
+            <tr>
+                <td class="col-concept bold" style="font-size:14px; padding-top:5px;">(=) EFECTIVO CAJA:</td>
+                <td class="col-price bold" style="font-size:14px; padding-top:5px;" id="efectivo_caja"></td>
+            </tr>
+        </table>
+        
+        <br>
+        <div class="divider"></div>
+        <p class="center bold">DIFERENCIA (Cuadre):</p>
+        <p class="center bold" style="font-size:16px" id="cuadre_total"></p>
+        <div class="divider"></div>
+        <br>
+        <p class="center">__________________________</p>
+        <p class="center">Firma: <span id="firma_usuario"></span></p>
+        <br>
+        <p class="center" style="font-size: 10px;">*** Fin del Reporte ***</p>
+
+    </div>
+
+    <script>
+        // CONFIGURACIÓN DE DATOS DESDE APPSHEET
+        // AppSheet reemplazará todo lo que está entre << >> antes de generar el archivo.
+        
+        const datosEntrada = {
+            "sucursal": "<<[SUCURSALCC]>>",
+            "fecha": "<<[FechaCierre]>>",
+            "usuario": "<<[Usuario]>>",
+            "consecutivo": "<<[Consecutivo]>>",
+            
+            // Cantidades y Totales (Se mantienen como string para conservar formato moneda si AppSheet lo envía)
+            "cnt_parque": "<<[COUNTPARQUE]>>", 
+            "total_parque": "<<[TOTALPARQUEEFECTIVO]>>",
+            
+            "cnt_carritos": "<<[COUNTCARRITOS]>>", 
+            "total_carritos": "<<[TOTALCARRITOSEFECTIVO]>>",
+            
+            "cnt_mensual": "<<[COUNTMENSUALIDAD]>>", 
+            "total_mensual": "<<[TOTALMENSUALIDADEFECTIVO]>>",
+            
+            "cnt_bodegas": "<<[COUNTBODEGAS]>>", 
+            "total_bodegas": "<<[TOTALBODEGASEFECTIVO]>>",
+            
+            "cnt_banio": "<<[COUNTBANIO]>>", 
+            "total_banio": "<<[TOTALBANIOEFECTIVO]>>",
+            
+            "total_gastos": "<<[TOTALGASTOS]>>",
+            
+            "total_sistema": "<<[TOTAL]>>",
+            "transacciones": "<<[TRANSACCIONES]>>",
+            "efectivo": "<<[EFECTIVO]>>",
+            "cuadre": "<<[CUADRE_TOTAL]>>",
+
+            // --- LISTAS RELACIONADAS ---
+            // Usamos Start y End para crear un array de objetos JSON.
+            // La coma al final de la llave de cierre } es importante para separar items.
+            
+            "lista_gastos": [
+                <<Start: [Related GASTOSs]>>
+                {
+                    // CAMBIA [Concepto] y [Monto] por los nombres REALES de tu tabla GASTOS
+                    "descripcion": "<<[Concepto]>>", 
+                    "monto": "<<[Monto]>>"
+                },
+                <<End>>
+            ],
+            
+            "lista_bancos": [
+                // Verifica si tu columna se llama exactamente así, a veces AppSheet pone un 's' al final
+                <<Start: [Related TRANSFERENCIA]>> 
+                {
+                    // CAMBIA [Banco] y [Valor] por los nombres REALES de tu tabla TRANSFERENCIAS
+                    "referencia": "<<[Banco]>> - <<[Referencia]>>", 
+                    "valor": "<<[Valor]>>"
+                },
+                <<End>>
+            ]
+        };
+
+        // --- LÓGICA DE RENDERIZADO (NO TOCAR) ---
+        function cargarDatos(datos) {
+            // Textos simples
+            document.getElementById('sucursal').innerText = datos.sucursal;
+            document.getElementById('fecha').innerText = datos.fecha;
+            document.getElementById('usuario').innerText = datos.usuario;
+            document.getElementById('firma_usuario').innerText = datos.usuario;
+            document.getElementById('consecutivo').innerText = datos.consecutivo;
+
+            // Ingresos
+            document.getElementById('cnt_parque').innerText = datos.cnt_parque;
+            document.getElementById('total_parque').innerText = datos.total_parque;
+            document.getElementById('cnt_carritos').innerText = datos.cnt_carritos;
+            document.getElementById('total_carritos').innerText = datos.total_carritos;
+            document.getElementById('cnt_mensual').innerText = datos.cnt_mensual;
+            document.getElementById('total_mensual').innerText = datos.total_mensual;
+            document.getElementById('cnt_bodegas').innerText = datos.cnt_bodegas;
+            document.getElementById('total_bodegas').innerText = datos.total_bodegas;
+            document.getElementById('cnt_banio').innerText = datos.cnt_banio;
+            document.getElementById('total_banio').innerText = datos.total_banio;
+
+            // Totales
+            document.getElementById('total_gastos').innerText = "- " + datos.total_gastos;
+            document.getElementById('total_transacciones').innerText = datos.transacciones;
+            document.getElementById('total_transacciones_resta').innerText = datos.transacciones;
+            document.getElementById('total_sistema').innerText = datos.total_sistema;
+            document.getElementById('efectivo_caja').innerText = datos.efectivo;
+            document.getElementById('cuadre_total').innerText = datos.cuadre;
+
+            // Renderizar Gastos
+            const tablaGastos = document.getElementById('tabla_gastos');
+            if(datos.lista_gastos && datos.lista_gastos.length > 0) {
+                datos.lista_gastos.forEach(gasto => {
+                    // Evitar filas vacías si el Start generó un objeto vacío accidental
+                    if(gasto.descripcion || gasto.monto){
+                        let fila = `<tr class="row-detail">
+                                        <td class="col-concept">- ${gasto.descripcion}</td>
+                                        <td class="col-price">- ${gasto.monto}</td>
+                                    </tr>`;
+                        tablaGastos.innerHTML += fila;
+                    }
+                });
+            } else {
+                tablaGastos.innerHTML = "<tr><td colspan='2' class='center'><small>--- Sin Gastos ---</small></td></tr>";
+            }
+
+            // Renderizar Bancos
+            const tablaBancos = document.getElementById('tabla_bancos');
+            if(datos.lista_bancos && datos.lista_bancos.length > 0) {
+                datos.lista_bancos.forEach(banco => {
+                    if(banco.referencia || banco.valor){
+                        let fila = `<tr class="row-detail">
+                                        <td class="col-concept">${banco.referencia}</td>
+                                        <td class="col-price">${banco.valor}</td>
+                                    </tr>`;
+                        tablaBancos.innerHTML += fila;
+                    }
+                });
+            } else {
+                tablaBancos.innerHTML = "<tr><td colspan='2' class='center'><small>--- Solo Efectivo ---</small></td></tr>";
+            }
+        }
+
+        // Iniciar
+        cargarDatos(datosEntrada);
+
+    </script>
+</body>
+</html>
