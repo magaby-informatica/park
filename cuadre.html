@@ -43,14 +43,12 @@
   CIERRE DE SUCURSAL  
 </div>
 
-<div class="center">
-  <<[SUCURSALCC]>>
-</div>
+<div class="center" id="sucursal"></div>
 
 <div class="line"></div>
 
-Fecha: <<[FechaCierre]>>  
-Usuario: <<[Usuario]>>
+Fecha: <span id="fecha"></span>  
+Usuario: <span id="usuario"></span>
 
 <div class="line"></div>
 
@@ -60,12 +58,12 @@ Usuario: <<[Usuario]>>
     <th>Concepto</th>
     <th class="right">Cnt</th>
   </tr>
-  <tr><td>Parqueo</td><td class="right"><<[COUNTPARQUE]>></td></tr>
-  <tr><td>Carritos</td><td class="right"><<[COUNTCARRITOS]>></td></tr>
-  <tr><td>Mensualidad</td><td class="right"><<[COUNTMENSUALIDAD]>></td></tr>
-  <tr><td>Bodegas</td><td class="right"><<[COUNTBODEGAS]>></td></tr>
-  <tr><td>Baños</td><td class="right"><<[COUNTBANIO]>></td></tr>
-  <tr><td>Gastos</td><td class="right"><<[COUNTGASTOS]>></td></tr>
+  <tr><td>Parqueo</td><td class="right" id="cnt_parque"></td></tr>
+  <tr><td>Carritos</td><td class="right" id="cnt_carritos"></td></tr>
+  <tr><td>Mensualidad</td><td class="right" id="cnt_mensual"></td></tr>
+  <tr><td>Bodegas</td><td class="right" id="cnt_bodegas"></td></tr>
+  <tr><td>Baños</td><td class="right" id="cnt_banio"></td></tr>
+  <tr><td>Gastos</td><td class="right" id="cnt_gastos"></td></tr>
 </table>
 
 <div class="line"></div>
@@ -76,31 +74,66 @@ Usuario: <<[Usuario]>>
     <th>Concepto</th>
     <th class="right">Total</th>
   </tr>
-  <tr><td>Parqueo</td><td class="right"><<[TOTALPARQUEEFECTIVO]>></td></tr>
-  <tr><td>Carritos</td><td class="right"><<[TOTALCARRITOSEFECTIVO]>></td></tr>
-  <tr><td>Mensualidad</td><td class="right"><<[TOTALMENSUALIDADEFECTIVO]>></td></tr>
-  <tr><td>Bodegas</td><td class="right"><<[TOTALBODEGASEFECTIVO]>></td></tr>
-  <tr><td>Baños</td><td class="right"><<[TOTALBANIOEFECTIVO]>></td></tr>
-  <tr><td>Gastos</td><td class="right"><<[TOTALGASTOS]>></td></tr>
+  <tr><td>Parqueo</td><td class="right" id="total_parque"></td></tr>
+  <tr><td>Carritos</td><td class="right" id="total_carritos"></td></tr>
+  <tr><td>Mensualidad</td><td class="right" id="total_mensual"></td></tr>
+  <tr><td>Bodegas</td><td class="right" id="total_bodegas"></td></tr>
+  <tr><td>Baños</td><td class="right" id="total_banio"></td></tr>
+  <tr><td>Gastos</td><td class="right" id="total_gastos"></td></tr>
 </table>
 
 <div class="line"></div>
 
 <div class="bold">
-  TOTAL EFECTIVO: <span style="float:right;"><<[EFECTIVO]>></span>
+  TOTAL EFECTIVO: <span id="total_efectivo" style="float:right;"></span>
 </div>
 
 <div class="bold">
-  TRANSACCIONES: <span style="float:right;"><<[TRANSACCIONES]>></span>
+  TRANSACCIONES: <span id="transacciones" style="float:right;"></span>
 </div>
 
 <div class="bold">
-  CUADRE: <span style="float:right;"><<[CUADRE_TOTAL]>></span>
+  CUADRE: <span id="cuadre" style="float:right;"></span>
 </div>
 
 <div class="line"></div>
 
 <div class="center">FIN DEL CIERRE</div>
+
+<script>
+function getParam(name){
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(name) || '';
+}
+
+document.addEventListener("DOMContentLoaded", function(){
+  document.getElementById("sucursal").textContent = getParam("sucursal");
+  document.getElementById("fecha").textContent = getParam("fecha");
+  document.getElementById("usuario").textContent = getParam("usuario");
+
+  document.getElementById("cnt_parque").textContent = getParam("cnt_parque");
+  document.getElementById("total_parque").textContent = getParam("total_parque");
+
+  document.getElementById("cnt_carritos").textContent = getParam("cnt_carritos");
+  document.getElementById("total_carritos").textContent = getParam("total_carritos");
+
+  document.getElementById("cnt_mensual").textContent = getParam("cnt_mensual");
+  document.getElementById("total_mensual").textContent = getParam("total_mensual");
+
+  document.getElementById("cnt_bodegas").textContent = getParam("cnt_bodegas");
+  document.getElementById("total_bodegas").textContent = getParam("total_bodegas");
+
+  document.getElementById("cnt_banio").textContent = getParam("cnt_banio");
+  document.getElementById("total_banio").textContent = getParam("total_banio");
+
+  document.getElementById("cnt_gastos").textContent = getParam("cnt_gastos");
+  document.getElementById("total_gastos").textContent = getParam("total_gastos");
+
+  document.getElementById("total_efectivo").textContent = getParam("total_efectivo");
+  document.getElementById("transacciones").textContent = getParam("transacciones");
+  document.getElementById("cuadre").textContent = getParam("cuadre");
+});
+</script>
 
 </body>
 </html>
