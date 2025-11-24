@@ -1,138 +1,211 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cierre de Sucursal</title>
 <style>
-  body{
-    width: 58mm;
-    font-family: monospace;
-    font-size: 12px;
-    margin: 0;
-    padding: 0;
-  }
-  .center{
-    text-align: center;
-  }
-  .line{
-    border-bottom: 1px dashed #000;
-    margin: 4px 0;
-  }
-  table{
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 5px;
-  }
-  th, td{
-    font-size: 12px;
-    padding: 2px 0;
-  }
-  th{
-    text-align: left;
-  }
-  .right{
-    text-align: right;
-  }
-  .bold{
-    font-weight: bold;
-  }
+    /* Configuración base para impresora térmica de 58mm */
+    body {
+        width: 54mm; /* Un poco menos de 58mm para margen de seguridad */
+        margin: 0 auto;
+        padding: 2mm;
+        font-family: 'Courier New', Courier, monospace; /* Fuente monoespaciada tipo ticket */
+        font-size: 12px;
+        color: #000;
+        background-color: #fff;
+    }
+
+    .center { text-align: center; }
+    .right { text-align: right; }
+    .bold { font-weight: bold; }
+    
+    /* Líneas separadoras hechas con guiones para simular ticket clásico */
+    .dashed-line {
+        border-top: 1px dashed #000;
+        margin: 5px 0;
+        width: 100%;
+    }
+
+    /* Tablas */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    td, th {
+        padding: 2px 0;
+        vertical-align: top;
+    }
+    
+    /* Ocultar botón de impresión en el papel */
+    @media print {
+        #printBtn { display: none; }
+    }
+    
+    /* Botón flotante para re-imprimir si es necesario */
+    #printBtn {
+        margin-top: 10px;
+        width: 100%;
+        padding: 10px;
+        background: #000;
+        color: #fff;
+        border: none;
+        font-family: sans-serif;
+        cursor: pointer;
+    }
 </style>
 </head>
 <body>
 
-<div class="center bold">
-  CIERRE DE SUCURSAL  
-</div>
+    <div class="center bold" style="font-size: 14px;">CIERRE DE SUCURSAL</div>
+    <div class="center bold" id="sucursal" style="margin-bottom: 5px;"></div>
 
-<div class="center" id="sucursal"></div>
+    <div class="dashed-line"></div>
 
-<div class="line"></div>
+    <div>Fecha: <span id="fecha"></span></div>
+    <div>Usuario: <span id="usuario"></span></div>
 
-Fecha: <span id="fecha"></span>  
-Usuario: <span id="usuario"></span>
+    <div class="dashed-line"></div>
 
-<div class="line"></div>
+    <!-- SECCIÓN DE CONTEOS -->
+    <div class="bold" style="margin-bottom: 2px;">CONTEOS (CANTIDAD)</div>
+    <table>
+        <tr>
+            <td>Parqueo</td>
+            <td class="right" id="cnt_parque">0</td>
+        </tr>
+        <tr>
+            <td>Carritos</td>
+            <td class="right" id="cnt_carritos">0</td>
+        </tr>
+        <tr>
+            <td>Mensualidad</td>
+            <td class="right" id="cnt_mensual">0</td>
+        </tr>
+        <tr>
+            <td>Bodegas</td>
+            <td class="right" id="cnt_bodegas">0</td>
+        </tr>
+        <tr>
+            <td>Baños</td>
+            <td class="right" id="cnt_banio">0</td>
+        </tr>
+        <tr>
+            <td>Gastos</td>
+            <td class="right" id="cnt_gastos">0</td>
+        </tr>
+    </table>
 
-<!-- Tabla de CONTEOS -->
-<table>
-  <tr>
-    <th>Concepto</th>
-    <th class="right">Cnt</th>
-  </tr>
-  <tr><td>Parqueo</td><td class="right" id="cnt_parque"></td></tr>
-  <tr><td>Carritos</td><td class="right" id="cnt_carritos"></td></tr>
-  <tr><td>Mensualidad</td><td class="right" id="cnt_mensual"></td></tr>
-  <tr><td>Bodegas</td><td class="right" id="cnt_bodegas"></td></tr>
-  <tr><td>Baños</td><td class="right" id="cnt_banio"></td></tr>
-  <tr><td>Gastos</td><td class="right" id="cnt_gastos"></td></tr>
-</table>
+    <div class="dashed-line"></div>
 
-<div class="line"></div>
+    <!-- SECCIÓN DE DINERO -->
+    <div class="bold" style="margin-bottom: 2px;">TOTALES (DINERO)</div>
+    <table>
+        <tr>
+            <td>Parqueo</td>
+            <td class="right" id="total_parque" data-format="money">0</td>
+        </tr>
+        <tr>
+            <td>Carritos</td>
+            <td class="right" id="total_carritos" data-format="money">0</td>
+        </tr>
+        <tr>
+            <td>Mensualidad</td>
+            <td class="right" id="total_mensual" data-format="money">0</td>
+        </tr>
+        <tr>
+            <td>Bodegas</td>
+            <td class="right" id="total_bodegas" data-format="money">0</td>
+        </tr>
+        <tr>
+            <td>Baños</td>
+            <td class="right" id="total_banio" data-format="money">0</td>
+        </tr>
+        <tr>
+            <td>Gastos</td>
+            <td class="right" id="total_gastos" data-format="money">0</td>
+        </tr>
+    </table>
 
-<!-- Tabla de TOTALES -->
-<table>
-  <tr>
-    <th>Concepto</th>
-    <th class="right">Total</th>
-  </tr>
-  <tr><td>Parqueo</td><td class="right" id="total_parque"></td></tr>
-  <tr><td>Carritos</td><td class="right" id="total_carritos"></td></tr>
-  <tr><td>Mensualidad</td><td class="right" id="total_mensual"></td></tr>
-  <tr><td>Bodegas</td><td class="right" id="total_bodegas"></td></tr>
-  <tr><td>Baños</td><td class="right" id="total_banio"></td></tr>
-  <tr><td>Gastos</td><td class="right" id="total_gastos"></td></tr>
-</table>
+    <div class="dashed-line"></div>
 
-<div class="line"></div>
+    <!-- RESUMEN FINAL -->
+    <table>
+        <tr class="bold" style="font-size: 13px;">
+            <td>TOTAL EFECTIVO:</td>
+            <td class="right" id="total_efectivo" data-format="money"></td>
+        </tr>
+        <tr>
+            <td>Transacciones:</td>
+            <td class="right" id="transacciones"></td>
+        </tr>
+        <tr class="bold" style="margin-top: 5px;">
+            <td>CUADRE:</td>
+            <td class="right" id="cuadre" data-format="money"></td>
+        </tr>
+    </table>
 
-<div class="bold">
-  TOTAL EFECTIVO: <span id="total_efectivo" style="float:right;"></span>
-</div>
+    <div class="dashed-line"></div>
+    <div class="center">*** FIN DEL CIERRE ***</div>
+    <br>
 
-<div class="bold">
-  TRANSACCIONES: <span id="transacciones" style="float:right;"></span>
-</div>
-
-<div class="bold">
-  CUADRE: <span id="cuadre" style="float:right;"></span>
-</div>
-
-<div class="line"></div>
-
-<div class="center">FIN DEL CIERRE</div>
+    <button id="printBtn" onclick="window.print()">IMPRIMIR</button>
 
 <script>
-function getParam(name){
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get(name) || '';
-}
+    // Función para obtener parámetros de la URL
+    function getParam(name) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
+    }
 
-document.addEventListener("DOMContentLoaded", function(){
-  document.getElementById("sucursal").textContent = getParam("sucursal");
-  document.getElementById("fecha").textContent = getParam("fecha");
-  document.getElementById("usuario").textContent = getParam("usuario");
+    // Función para formatear dinero
+    function formatMoney(amount) {
+        if (!amount || isNaN(amount)) return "$ 0.00"; // Valor por defecto
+        // Ajusta 'es-CO' a tu país (ej: 'es-MX', 'es-GT', 'es-US')
+        // 'COP' para pesos colombianos, 'USD' para dólares, 'GTQ' para quetzales
+        return new Intl.NumberFormat('es-CO', { 
+            style: 'currency', 
+            currency: 'COP',
+            minimumFractionDigits: 0 
+        }).format(amount);
+    }
 
-  document.getElementById("cnt_parque").textContent = getParam("cnt_parque");
-  document.getElementById("total_parque").textContent = getParam("total_parque");
+    document.addEventListener("DOMContentLoaded", function() {
+        // Lista de campos que son solo texto o números simples
+        const textFields = [
+            "sucursal", "fecha", "usuario", 
+            "cnt_parque", "cnt_carritos", "cnt_mensual", 
+            "cnt_bodegas", "cnt_banio", "cnt_gastos", "transacciones"
+        ];
 
-  document.getElementById("cnt_carritos").textContent = getParam("cnt_carritos");
-  document.getElementById("total_carritos").textContent = getParam("total_carritos");
+        // Rellenar campos de texto
+        textFields.forEach(id => {
+            const val = getParam(id);
+            if (val) document.getElementById(id).textContent = val;
+        });
 
-  document.getElementById("cnt_mensual").textContent = getParam("cnt_mensual");
-  document.getElementById("total_mensual").textContent = getParam("total_mensual");
+        // Lista de campos que son DINERO
+        const moneyFields = [
+            "total_parque", "total_carritos", "total_mensual", 
+            "total_bodegas", "total_banio", "total_gastos", 
+            "total_efectivo", "cuadre"
+        ];
 
-  document.getElementById("cnt_bodegas").textContent = getParam("cnt_bodegas");
-  document.getElementById("total_bodegas").textContent = getParam("total_bodegas");
+        // Rellenar y formatear campos de dinero
+        moneyFields.forEach(id => {
+            const val = getParam(id);
+            if (val) {
+                document.getElementById(id).textContent = formatMoney(parseFloat(val));
+            } else {
+                document.getElementById(id).textContent = formatMoney(0);
+            }
+        });
 
-  document.getElementById("cnt_banio").textContent = getParam("cnt_banio");
-  document.getElementById("total_banio").textContent = getParam("total_banio");
-
-  document.getElementById("cnt_gastos").textContent = getParam("cnt_gastos");
-  document.getElementById("total_gastos").textContent = getParam("total_gastos");
-
-  document.getElementById("total_efectivo").textContent = getParam("total_efectivo");
-  document.getElementById("transacciones").textContent = getParam("transacciones");
-  document.getElementById("cuadre").textContent = getParam("cuadre");
-});
+        // Intentar imprimir automáticamente después de 1 segundo (para asegurar carga)
+        setTimeout(() => {
+            // window.print(); // Descomenta esta línea si quieres que imprima nada más abrirse
+        }, 1000);
+    });
 </script>
 
 </body>
