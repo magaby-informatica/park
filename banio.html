@@ -9,7 +9,7 @@
       font-family: 'Arial', sans-serif;
       font-size: 14px;
       font-weight: bold;
-      color: #000000;
+      color: #000;
       margin: 0;
       padding: 0;
       text-align: center;
@@ -32,41 +32,12 @@
     }
 
     .titulo {
-      text-align: center;
-      margin-bottom: 2px;
-    }
-
-    .item {
-      margin-bottom: 5px;
-      text-align: center;
+      margin-bottom: 3px;
     }
 
     .linea {
       border-top: 1px dashed #000;
       margin: 10px 0;
-    }
-
-    .imagen-container {
-      text-align: center;
-      margin-top: 10px;
-      margin-bottom: 10px;
-    }
-
-    .imagen-container img {
-      max-width: 100%;
-      height: auto;
-      display: none;
-    }
-
-    .pie {
-      font-size: 14px;
-      text-align: center;
-      margin-top: 10px;
-    }
-
-    .pie strong {
-      display: block;
-      margin-bottom: 5px;
     }
   </style>
 </head>
@@ -75,15 +46,16 @@
 
   <div class="recibo">
 
+    <!-- Título general -->
     <div class="titulo" style="font-size:22px;">PARQUEADERO</div>
 
-    <!-- NOMBRE SUCURSAL -->
-    <div class="titulo" id="nombreSucursal"></div>
+    <!-- Nombre sucursal corregido -->
+    <div class="titulo" id="nombreSucursal" style="font-size:20px;"></div>
 
-    <!-- DIRECCIÓN -->
+    <!-- Dirección -->
     <div class="titulo" id="direccionSucursal"></div>
 
-    <!-- TELÉFONO -->
+    <!-- Teléfono -->
     <div class="titulo" id="telefonoSucursal"></div>
 
     <div class="titulo">🕑 Horario de atención<br>
@@ -91,20 +63,15 @@
       Domingos: 8:00 am – 2:00 pm
     </div>
 
-    <div class="titulo">-------------------------------------------</div>
+    <div class="linea"></div>
 
-    <div class="item"><span class="label">Recibo:</span> <span id="indice"></span></div>
-     <div class="item"><span class="label">Uso de Baño:</span> 
+    <div class="item">Recibo: <span id="indice"></span></div>
 
-    <div class="item"><span class="label" id="banioLabel"></span></div>
+    <div class="item"><span id="banioLabel"></span></div>
 
-    <div class="titulo">-------------------------------------------</div>
+    <div class="linea"></div>
 
-    <div class="item"><span class="label"><strong>Total:</strong></span> <span id="valor"></span></div>
-
-    <div class="imagen-container">
-      <img id="imagenRecibo" src="" alt="Imagen del recibo">
-    </div>
+    <div class="item"><strong>Total:</strong> <span id="valor"></span></div>
 
     <div class="linea"></div>
 
@@ -121,33 +88,21 @@ function cargarDatosYImprimir() {
 
   const params = new URLSearchParams(window.location.search);
 
-  const setText = (id, value) => {
+  const texto = (id, val) => {
     const el = document.getElementById(id);
-    if (el) el.textContent = value || "";
+    if (el) el.textContent = val || "";
   };
 
-  // ⭐ Encabezado dinámico con tus campos reales
-  setText("nombreSucursal", params.get("SUCURSALBANIO") ? params.get("SUCURSALBANIO") : "");
-  setText("direccionSucursal", params.get("DIRECCIONSUCURSALBANIO") ? "DIR: " + params.get("DIRECCIONSUCURSALBANIO") : "");
-  setText("telefonoSucursal", params.get("TELEFONOSUC") ? "TEL: " + params.get("TELEFONOSUC") : "");
+  // ⭐ CAMPOS REALES DE TU TABLA
+  texto("nombreSucursal", params.get("SUCURSALBANIO") || "SUCURSAL");
+  texto("direccionSucursal", params.get("DIRECCIONSUCURSALBANIO") ? "DIR: " + params.get("DIRECCIONSUCURSALBANIO") : "");
+  texto("telefonoSucursal", params.get("TELEFONOSUC") ? "TEL: " + params.get("TELEFONOSUC") : "");
 
-  // ⭐ Datos del recibo
-  setText("indice", params.get("indice"));
-  setText("valor", params.get("valor"));
-  setText("banioLabel", params.get("banio"));
+  // Datos recibo
+  texto("indice", params.get("INDICE"));
+  texto("valor", params.get("VALOR"));
+  texto("banioLabel", params.get("BANIO") ? params.get("BANIO") : "Uso de Baño");
 
-  // ⭐ Imagen opcional
-  const imgRuta = params.get("imagen");
-  const img = document.getElementById("imagenRecibo");
-
-  if (imgRuta) {
-    img.src = imgRuta;
-    img.style.display = "block";
-  } else {
-    img.style.display = "none";
-  }
-
-  // ⭐ Autoimprimir
   setTimeout(() => window.print(), 150);
 }
 </script>
