@@ -76,8 +76,14 @@
   <div class="recibo">
 
     <div class="titulo" style="font-size:22px;">PARQUEADERO</div>
+
+    <!-- NOMBRE SUCURSAL -->
     <div class="titulo" id="nombreSucursal"></div>
+
+    <!-- DIRECCIÓN -->
     <div class="titulo" id="direccionSucursal"></div>
+
+    <!-- TELÉFONO -->
     <div class="titulo" id="telefonoSucursal"></div>
 
     <div class="titulo">🕑 Horario de atención<br>
@@ -88,8 +94,9 @@
     <div class="titulo">-------------------------------------------</div>
 
     <div class="item"><span class="label">Recibo:</span> <span id="indice"></span></div>
+     <div class="item"><span class="label">Uso de Baño:</span> 
 
-    <div class="item"><span class="label">Uso de baño</span></div>
+    <div class="item"><span class="label" id="banioLabel"></span></div>
 
     <div class="titulo">-------------------------------------------</div>
 
@@ -119,14 +126,15 @@ function cargarDatosYImprimir() {
     if (el) el.textContent = value || "";
   };
 
-  // ⭐ Encabezado dinámico
-  setText("nombreSucursal", params.get("SUCURSALBANIO") ? "PARQUEADERO " + params.get("SUCURSALBANIO") : "");
-  setText("direccionSucursal", params.get("DIRECCIONSUCURSAL") ? "DIR: " + params.get("DIRECCIONSUCURSAL") : "");
-  setText("telefonoSucursal", params.get("TELEFONOSUCURSAL") ? "TEL: " + params.get("TELEFONOSUCURSAL") : "");
+  // ⭐ Encabezado dinámico con tus campos reales
+  setText("nombreSucursal", params.get("SUCURSALBANIO") ? params.get("SUCURSALBANIO") : "");
+  setText("direccionSucursal", params.get("DIRECCIONSUCURSALBANIO") ? "DIR: " + params.get("DIRECCIONSUCURSALBANIO") : "");
+  setText("telefonoSucursal", params.get("TELEFONOSUC") ? "TEL: " + params.get("TELEFONOSUC") : "");
 
   // ⭐ Datos del recibo
   setText("indice", params.get("indice"));
   setText("valor", params.get("valor"));
+  setText("banioLabel", params.get("banio"));
 
   // ⭐ Imagen opcional
   const imgRuta = params.get("imagen");
