@@ -92,19 +92,19 @@
 <table>
     <tr style="font-size: 14px;">
         <td>TOTAL EFECTIVO:</td>
-        <td class="right" id="total_efectivo"></td>
+        <td class="right" id="total_efectivo">0</td>
     </tr>
     <tr>
         <td>TRANSACCIONES:</td>
-        <td class="right" id="transacciones"></td>
+        <td class="right" id="transacciones">0</td>
     </tr>
     <tr>
         <td>GASTOS:</td>
-        <td class="right" id="total_gastos_final"></td>
+        <td class="right" id="total_gastos_final">0</td>
     </tr>
     <tr style="font-size: 14px;">
         <td>CUADRE:</td>
-        <td class="right" id="cuadre"></td>
+        <td class="right" id="cuadre">0</td>
     </tr>
 </table>
 
@@ -145,7 +145,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
     textFields.forEach(id=>{
         const val = getParam(id);
-        if(val !== null) document.getElementById(id).textContent = val;
+        document.getElementById(id).textContent = val !== null ? val : "0";
     });
 
     const moneyFields = [
