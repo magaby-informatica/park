@@ -4,45 +4,38 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cierre de Sucursal</title>
+
 <style>
-    /* Ajuste seguro para impresora 58 mm */
     body {
-        width: 52mm;            /* ← ANTES 54mm – ahora 52mm para evitar cortes */
+        width: 52mm;
         margin: 0 auto;
-        padding: 2mm 1mm 2mm 2mm; /* ← 1mm extra a la derecha */
+        padding: 2mm 1mm 2mm 2mm;
         font-family: Arial, sans-serif;
         font-size: 13px;
-        color: #000 !important;
+        color: #000;
         font-weight: 900;
         background-color: #fff;
     }
-
     .center { text-align: center; }
     .right { text-align: right; }
-
     .dashed-line {
         border-top: 2px dashed #000;
         margin: 5px 0;
         width: 100%;
     }
-
     table {
         width: 100%;
-        max-width: 100%;       /* ← asegura que no se pase del ancho */
         border-collapse: collapse;
         font-weight: 900;
-        word-break: break-all; /* ← evita desbordes */
+        word-break: break-all;
     }
-
     td, th {
         padding: 2px 0;
         vertical-align: top;
     }
-
     @media print {
         #printBtn { display: none; }
     }
-
     #printBtn {
         margin-top: 10px;
         width: 100%;
@@ -59,7 +52,7 @@
 <body>
 
 <div class="center" style="font-size: 15px; font-weight: 900;">CIERRE DE SUCURSAL</div>
-<div class="center" id="sucursal" style="margin-bottom: 5px; font-weight: 900;"></div>
+<div class="center" id="sucursal" style="margin-bottom: 5px;"></div>
 
 <div class="dashed-line"></div>
 
@@ -68,7 +61,7 @@
 
 <div class="dashed-line"></div>
 
-<div style="margin-bottom: 2px; font-weight: 900;">CONTEOS (CANTIDAD)</div>
+<div style="margin-bottom: 2px;">CONTEOS (CANTIDAD)</div>
 <table>
     <tr><td>Parqueo</td><td class="right" id="cnt_parque">0</td></tr>
     <tr><td>Carritos</td><td class="right" id="cnt_carritos">0</td></tr>
@@ -76,11 +69,13 @@
     <tr><td>Bodegas</td><td class="right" id="cnt_bodegas">0</td></tr>
     <tr><td>Baños</td><td class="right" id="cnt_banio">0</td></tr>
     <tr><td>Gastos</td><td class="right" id="cnt_gastos">0</td></tr>
+    <tr><td>Hielo</td><td class="right" id="cnt_hielo">0</td></tr>
+    <tr><td>Otros</td><td class="right" id="cnt_otros">0</td></tr>
 </table>
 
 <div class="dashed-line"></div>
 
-<div style="margin-bottom: 2px; font-weight: 900;">TOTALES (DINERO)</div>
+<div style="margin-bottom: 2px;">TOTALES (DINERO)</div>
 <table>
     <tr><td>Parqueo</td><td class="right" id="total_parque">0</td></tr>
     <tr><td>Carritos</td><td class="right" id="total_carritos">0</td></tr>
@@ -88,20 +83,26 @@
     <tr><td>Bodegas</td><td class="right" id="total_bodegas">0</td></tr>
     <tr><td>Baños</td><td class="right" id="total_banio">0</td></tr>
     <tr><td>Gastos</td><td class="right" id="total_gastos">0</td></tr>
+    <tr><td>Hielo</td><td class="right" id="total_hielo">0</td></tr>
+    <tr><td>Otros</td><td class="right" id="total_Otros">0</td></tr>
 </table>
 
 <div class="dashed-line"></div>
 
 <table>
-    <tr style="font-size: 14px; font-weight: 900;">
+    <tr style="font-size: 14px;">
         <td>TOTAL EFECTIVO:</td>
         <td class="right" id="total_efectivo"></td>
     </tr>
     <tr>
-        <td>Transacciones:</td>
+        <td>TRANSACCIONES:</td>
         <td class="right" id="transacciones"></td>
     </tr>
-    <tr style="font-weight: 900; font-size: 14px;">
+    <tr>
+        <td>GASTOS:</td>
+        <td class="right" id="total_gastos_final"></td>
+    </tr>
+    <tr style="font-size: 14px;">
         <td>CUADRE:</td>
         <td class="right" id="cuadre"></td>
     </tr>
@@ -111,11 +112,10 @@
 
 <br><br><br>
 <div style="border-top: 2px solid #000; width: 80%; margin: 0 auto;"></div>
-<div class="center" style="margin-top: 5px; font-weight: 900;">Firma Responsable</div>
+<div class="center" style="margin-top: 5px;">Firma Responsable</div>
 <br>
 
 <div class="center">*** FIN DEL CIERRE ***</div>
-<br>
 
 <button id="printBtn" onclick="window.print()">IMPRIMIR</button>
 
@@ -139,23 +139,26 @@ document.addEventListener("DOMContentLoaded", function(){
     const textFields = [
         "sucursal","fecha","usuario",
         "cnt_parque","cnt_carritos","cnt_mensual",
-        "cnt_bodegas","cnt_banio","cnt_gastos","transacciones"
+        "cnt_bodegas","cnt_banio","cnt_gastos",
+        "cnt_hielo","cnt_otros"
     ];
 
     textFields.forEach(id=>{
-        const val=getParam(id);
-        if(val) document.getElementById(id).textContent=val;
+        const val = getParam(id);
+        if(val !== null) document.getElementById(id).textContent = val;
     });
 
-    const moneyFields=[
+    const moneyFields = [
         "total_parque","total_carritos","total_mensual",
         "total_bodegas","total_banio","total_gastos",
-        "total_efectivo","cuadre"
+        "total_hielo","total_Otros",
+        "total_efectivo","cuadre",
+        "transacciones","total_gastos_final"
     ];
 
     moneyFields.forEach(id=>{
-        const val=getParam(id);
-        document.getElementById(id).textContent = formatMoney(parseFloat(val||0));
+        const val = getParam(id);
+        document.getElementById(id).textContent = formatMoney(parseFloat(val || 0));
     });
 });
 </script>
