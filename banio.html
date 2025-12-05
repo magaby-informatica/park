@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Recibo Bodega</title>
-
+  <title>Recibo de Parqueadero</title>
   <style>
     body {
       font-family: 'Arial', sans-serif;
@@ -50,34 +49,38 @@
     <!-- Título general -->
     <div class="titulo" style="font-size:22px;">PARQUEADERO</div>
 
-    <!-- Nombre sucursal -->
+    <!-- Nombre sucursal corregido -->
     <div class="titulo" id="nombreSucursal" style="font-size:20px;"></div>
 
-    <!-- Ubicación -->
-    <div class="titulo" id="ubicacion"></div>
+    <!-- Dirección -->
+    <div class="titulo" id="direccionSucursal"></div>
 
-    <!-- Usuario -->
-    <div class="titulo" id="usuario"></div>
+    <!-- Teléfono -->
+    <div class="titulo" id="telefonoSucursal"></div>
+
+    <div class="titulo">🕑 Horario de atención<br>
+      Lun a Sáb: 7:00 am – 7:00 pm<br>
+      Domingos: 8:00 am – 2:00 pm
+    </div>
 
     <div class="linea"></div>
 
     <div class="item">Recibo: <span id="indice"></span></div>
-    <div class="item">Consecutivo: <span id="consecutivo"></span></div>
-    <div class="item">Fecha: <span id="fecha"></span></div>
+
+    <div class="item"><span id="banioLabel"></span></div>
 
     <div class="linea"></div>
 
-    <div class="item"><strong>Precio:</strong> <span id="precio"></span></div>
-    <div class="item"><strong>Valor Pagado:</strong> <span id="valorPagado"></span></div>
+    <div class="item"><strong>Total:</strong> <span id="valor"></span></div>
 
     <div class="linea"></div>
 
     <div class="pie">
       <strong>AVISO IMPORTANTE</strong>
-      <div>1. No respondemos por objetos no registrados.</div>
-      <div>2. Conserve este recibo para retirar su bodega.</div>
+      <div>1. No respondemos por objetos dejados en el carrito.</div>
+      <div>2. Solo respondemos por pérdida de cascos entregados en custodia.</div>
+      <div>3. Para retirar tu carrito presenta este tiquet.</div>
     </div>
-
   </div>
 
 <script>
@@ -90,17 +93,15 @@ function cargarDatosYImprimir() {
     if (el) el.textContent = val || "";
   };
 
-  // ⭐ DATOS DE TU TABLA INGBODEGA
-  texto("nombreSucursal", params.get("SUCURSAL") || "SUCURSAL");
-  texto("ubicacion", params.get("UBICACION") ? "UBICACIÓN: " + params.get("UBICACION") : "");
-  texto("usuario", params.get("USUARIOB") ? "USUARIO: " + params.get("USUARIOB") : "");
+  // ⭐ CAMPOS REALES DE TU TABLA
+  texto("nombreSucursal", params.get("SUCURSALBANIO") || "SUCURSAL");
+  texto("direccionSucursal", params.get("DIRECCIONSUCURSALBANIO") ? "DIR: " + params.get("DIRECCIONSUCURSALBANIO") : "");
+  texto("telefonoSucursal", params.get("TELEFONOSUC") ? "TEL: " + params.get("TELEFONOSUC") : "");
 
+  // Datos recibo
   texto("indice", params.get("INDICE"));
-  texto("consecutivo", params.get("CONSECUTIVO"));
-  texto("fecha", params.get("FECHA"));
-
-  texto("precio", params.get("PRECIO"));
-  texto("valorPagado", params.get("VALOR_PAGADO"));
+  texto("valor", params.get("VALOR"));
+  texto("banioLabel", params.get("BANIO") ? params.get("BANIO") : "Uso de Baño");
 
   setTimeout(() => window.print(), 150);
 }
