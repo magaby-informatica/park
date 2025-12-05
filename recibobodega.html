@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recibo Bodega</title>
+
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      font-size: 14px;
+      font-weight: bold;
+      color: #000;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    @media print {
+      body {
+        width: 58mm;
+        margin: 0;
+        padding: 0;
+      }
+    }
+
+    .recibo {
+      width: 58mm;
+      padding: 5px;
+      margin: 0 auto;
+      box-sizing: border-box;
+      text-align: center;
+    }
+
+    .titulo {
+      margin-bottom: 3px;
+    }
+
+    .linea {
+      border-top: 1px dashed #000;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+
+<body onload="cargarDatosYImprimir()">
+
+  <div class="recibo">
+
+    <!-- Título general -->
+    <div class="titulo" style="font-size:22px;">PARQUEADERO</div>
+
+    <!-- Nombre sucursal -->
+    <div class="titulo" id="nombreSucursal" style="font-size:20px;"></div>
+
+    <!-- Ubicación -->
+    <div class="titulo" id="ubicacion"></div>
+
+    <!-- Usuario -->
+    <div class="titulo" id="usuario"></div>
+
+    <div class="linea"></div>
+
+    <div class="item">Recibo: <span id="indice"></span></div>
+    <div class="item">Consecutivo: <span id="consecutivo"></span></div>
+    <div class="item">Fecha: <span id="fecha"></span></div>
+
+    <div class="linea"></div>
+
+    <div class="item"><strong>Precio:</strong> <span id="precio"></span></div>
+    <div class="item"><strong>Valor Pagado:</strong> <span id="valorPagado"></span></div>
+
+    <div class="linea"></div>
+
+    <div class="pie">
+      <strong>AVISO IMPORTANTE</strong>
+      <div>1. No respondemos por objetos no registrados.</div>
+      <div>2. Conserve este recibo para retirar su bodega.</div>
+    </div>
+
+  </div>
+
+<script>
+function cargarDatosYImprimir() {
+
+  const params = new URLSearchParams(window.location.search);
+
+  const texto = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val || "";
+  };
+
+  // ⭐ DATOS DE TU TABLA INGBODEGA
+  texto("nombreSucursal", params.get("SUCURSAL") || "SUCURSAL");
+  texto("ubicacion", params.get("UBICACION") ? "UBICACIÓN: " + params.get("UBICACION") : "");
+  texto("usuario", params.get("USUARIOB") ? "USUARIO: " + params.get("USUARIOB") : "");
+
+  texto("indice", params.get("INDICE"));
+  texto("consecutivo", params.get("CONSECUTIVO"));
+  texto("fecha", params.get("FECHA"));
+
+  texto("precio", params.get("PRECIO"));
+  texto("valorPagado", params.get("VALOR_PAGADO"));
+
+  setTimeout(() => window.print(), 150);
+}
+</script>
+
+</body>
+</html>
