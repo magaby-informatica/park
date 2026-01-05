@@ -3,144 +3,90 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Recibo de Mensualidad</title>
 
 <style>
-body {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    font-size: 12px;
-    font-weight: bold;
-    color: #000;
+body{
+  margin:0;
+  padding:0;
+  font-family:Arial, sans-serif;
+  font-size:12px;
+  font-weight:bold;
+  color:#000;
 }
 
-.recibo {
-    width: 52mm;          /* 🔴 CLAVE PARA 58MM */
-    margin: 0 auto;
-    padding: 2mm 1mm;     /* márgenes seguros */
-    box-sizing: border-box;
+.recibo{
+  width:52mm;          /* 58mm real */
+  margin:0 auto;
+  padding:2mm 1mm;
+  box-sizing:border-box;
 }
 
-.titulo {
-    text-align: center;
-    margin: 2px 0;
-}
-
-.item {
-    text-align: center;
-    margin: 2px 0;
-    word-wrap: break-word;
-}
-
-.linea {
-    border-top: 1px dashed #000;
-    margin: 6px 0;
-}
-
-.total {
-    font-size: 14px;
-    margin: 6px 0;
-}
-
-.pie {
-    font-size: 11px;
-    text-align: center;
-    margin-top: 6px;
-}
-
-.imagen-container {
-    text-align: center;
-    margin-top: 5px;
-}
-
-.imagen-container img {
-    max-width: 100%;
-    display: none;
-}
+.titulo{text-align:center;margin:2px 0;}
+.item{text-align:center;margin:2px 0;}
+.linea{border-top:1px dashed #000;margin:6px 0;}
+.total{font-size:14px;margin:6px 0;}
+.pie{font-size:11px;text-align:center;margin-top:6px;}
 </style>
 </head>
 
-<body onload="cargarDatosYImprimir()">
+<body onload="cargar()">
 
 <div class="recibo">
 
-    <div class="titulo" style="font-size:15px;">EL TEMPLO AJM</div>
-    <div class="titulo" id="nombreSucursal"></div>
-    <div class="titulo" id="direccionSucursal"></div>
-    <div class="titulo" id="telefonoSucursal"></div>
+  <div class="titulo" style="font-size:15px;">EL TEMPLO AJM</div>
+  <div class="titulo" id="SUCURSAL"></div>
+  <div class="titulo" id="D_SUC"></div>
+  <div class="titulo" id="WhatsApp"></div>
 
-    <div class="titulo">
-        🕑 Horario de atención<br>
-        Lun a Sáb: 7:45 am – 7:15 pm
-    </div>
+  <div class="titulo">
+    🕑 Lun a Sáb<br>
+    7:45 am – 7:15 pm
+  </div>
 
-    <div class="linea"></div>
+  <div class="linea"></div>
 
-    <div class="titulo" style="font-size:14px;">RECIBO DE MENSUALIDAD</div>
+  <div class="titulo" style="font-size:14px;">RECIBO DE MENSUALIDAD</div>
 
-    <div class="item">ID: <span id="id_mensualidad"></span></div>
-    <div class="item">Cliente: <span id="nombre_cliente"></span></div>
-    <div class="item">Placa: <span id="placa_mensualidad"></span></div>
-    <div class="item">Inicio: <span id="fecha_inicio"></span></div>
-    <div class="item">Fin: <span id="fecha_termino"></span></div>
-    <div class="item">Estado: <span id="estado_pago"></span></div>
+  <div class="item">ID: <span id="Id_mensualidad"></span></div>
+  <div class="item">Cliente: <span id="NOMBRE_CLIENTE"></span></div>
+  <div class="item">Placa: <span id="Placapm"></span></div>
+  <div class="item">Inicio: <span id="Fechai_nicial"></span></div>
+  <div class="item">Fin: <span id="Fecha_termino"></span></div>
+  <div class="item">Estado: <span id="Estado"></span></div>
 
-    <div class="linea"></div>
+  <div class="linea"></div>
 
-    <div class="item total">
-        TOTAL PAGADO<br>
-        $ <span id="valor_pagado"></span>
-    </div>
+  <div class="item total">
+    TOTAL PAGADO<br>
+    $ <span id="Valor"></span>
+  </div>
 
-    <div class="imagen-container">
-        <img id="imagenRecibo">
-    </div>
+  <div class="linea"></div>
 
-    <div class="linea"></div>
-
-    <div class="pie">
-        <strong>AVISO IMPORTANTE</strong><br>
-        1. Entrega solo con recibo.<br>
-        2. No se guardan objetos personales.<br>
-        3. No respondemos por pérdidas o daños.<br>
-        4. Retirada la moto, no hay reclamos.
-    </div>
+  <div class="pie">
+    <strong>AVISO IMPORTANTE</strong><br>
+    1. Entrega solo con recibo.<br>
+    2. No se guardan objetos personales.<br>
+    3. No respondemos por pérdidas.<br>
+    4. Retirada la moto no hay reclamos.
+  </div>
 
 </div>
 
 <script>
-function cargarDatosYImprimir() {
-    const p = new URLSearchParams(window.location.search);
-
-    const set = (id, val) => {
-        const e = document.getElementById(id);
-        if (e) e.textContent = val || "";
-    };
-
-    /* ENCABEZADO */
-    set("nombreSucursal", p.get("Sucursal"));
-    set("direccionSucursal", p.get("dirsucur"));
-    set("telefonoSucursal", p.get("phone"));
-
-    /* DATOS */
-    set("id_mensualidad", p.get("Id_mensualidad"));
-    set("nombre_cliente", p.get("NombreUM"));
-    set("placa_mensualidad", p.get("Placapm"));
-    set("fecha_inicio", p.get("Fechai_nicial"));
-    set("fecha_termino", p.get("Fecha_termino"));
-    set("estado_pago", p.get("Estado"));
-    set("valor_pagado", p.get("Valor"));
-
-    /* IMAGEN */
-    const img = p.get("imagen");
-    const imgEl = document.getElementById("imagenRecibo");
-    if (img) {
-        imgEl.src = img;
-        imgEl.style.display = "block";
-    }
-
-    setTimeout(() => window.print(), 150);
+function cargar(){
+  const p = new URLSearchParams(location.search);
+  [
+    "Id_mensualidad","NOMBRE_CLIENTE","Placapm",
+    "Fechai_nicial","Fecha_termino","Estado",
+    "Valor","SUCURSAL","D_SUC","WhatsApp"
+  ].forEach(id=>{
+    const e=document.getElementById(id);
+    if(e) e.textContent=p.get(id)||"";
+  });
+  setTimeout(()=>window.print(),150);
 }
 </script>
 
