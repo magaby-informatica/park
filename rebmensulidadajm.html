@@ -115,12 +115,12 @@
       };
       
 		  // ✅ Datos dinámicos del encabezado
-      const nombre = params.get("sucursalp");
+      const Sucursal = params.get("Sucursal");
       const direccion = params.get("dirsucur");
       const telefono = params.get("phone");
 
-      setText("nombreSucursal", nombre ? "Sucursal " + nombre : "");
-      setText("direccionSucursal", direccion ? "DIR: " + direccion : "");
+      setText("nombreSucursal", sucu ? "Sucursal " + nombre : "");
+      setText("direccionSucursal", direccion ? "DIR: " + D_SUC : "");
       setText("telefonoSucursal", telefono ? "TELÉFONO: " + telefono : "");
 
 
