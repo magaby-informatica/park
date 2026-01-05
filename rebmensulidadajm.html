@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recibo de Mensualidad</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      font-size: 14px;
+      font-weight: bold;
+      color: #000000;
+      margin: 0;
+      padding: 0;
+    }
+    .recibo {
+      width: 58mm;
+      padding: 5px;
+      margin: auto;
+      box-sizing: border-box;
+    }
+    .titulo {
+      text-align: center;
+      margin-bottom: 2px;
+    }
+    .item {
+      margin-bottom: 5px;
+      text-align: center; /* Centrado */
+    }
+    .item .label {
+      font-weight: bold;
+    }
+    .linea {
+      border-top: 1px dashed #000;
+      margin: 10px 0;
+    }
+    .imagen-container {
+      text-align: center;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+    .imagen-container img {
+      max-width: 100%;
+      height: auto;
+      display: none; /* Se oculta por defecto y JS la muestra si existe */
+    }
+    .pie {
+      font-size: 14px;
+      text-align: center;
+      margin-top: 10px;
+    }
+    .pie strong {
+      display: block;
+      text-align: center;
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body onload="cargarDatosYImprimir()">
+
+   <!-- ✅ Encabezado corregido -->
+    <div class="titulo" style="font-size:16px;">EL TEMPLO AJM</div>
+    <div class="titulo" id="nombreSucursal"></div>
+    <div class="titulo" id="direccionSucursal"></div>
+    <div class="titulo" id="telefonoSucursal"></div>
+
+    <div class="titulo">🕑 Horario de atención<br>
+      Lun a Sáb: 7:45 am – 7:15 pm<br>
+         </div>
+    <div class="titulo">----------------------</div>
+
+    <!-- Nuevo Título para Mensualidad -->
+    <div class="titulo" style="font-size:18px; margin: 10px 0;">RECIBO DE MENSUALIDAD</div>
+
+    <!-- Campos de la imagen (Mensualidad) -->
+    <div class="item"><span class="label">ID Mensualidad:</span> <span id="id_mensualidad"></span></div>
+    <div class="item"><span class="label">Cliente:</span> <span id="nombre_cliente"></span></div>
+    <div class="item"><span class="label">Placa:</span> <span id="placa_mensualidad"></span></div>
+    <div class="item"><span class="label">Inicio Vigencia:</span> <span id="fecha_inicio"></span></div>
+    <div class="item"><span class="label">Fin Vigencia:</span> <span id="fecha_termino"></span></div>
+    <div class="item"><span class="label">Estado:</span> <span id="estado_pago"></span></div>
+    
+    <div class="titulo">--------------------------------------------------</div>
+    
+    <!-- Sección de Total -->
+    <div class="item" style="font-size: 16px;">
+      <span class="label"><strong>Total Pagado:</strong></span> 
+      <span id="valor_pagado"></span>
+    </div>
+    
+    <div class="imagen-container">
+      <img id="imagenRecibo" src="" alt="Imagen del recibo">
+    </div>
+
+    <div class="linea"></div>
+    <div class="pie">
+      <strong>AVISO IMPORTANTE</strong>
+      <div>1. Entrega solo con recibo.</div>
+      <div>2. No se guardan cascos ni objetos personales. Si los deja, es bajo su responsabilidad.</div>
+      <div>3. El parqueadero no responde por pérdida o daños por fuerza mayor/caso fortuito (incendio, terremoto, inundación, asonada u otros) ni por hechos de terceros.</div>
+      <div>4. * Retirada la moto, no se aceptan reclamos.</div>
+    </div>
+  </div>
+
+  <script>
+    function cargarDatosYImprimir() {
+      const params = new URLSearchParams(window.location.search);
+      
+      // Función auxiliar para asignar texto a un elemento de forma segura
+      const setText = (id, value) => {
+        const element = document.getElementById(id);
+        if (element) {
+          element.textContent = value || ""; // Si el valor es null o undefined, pone ""
+        }
+      };
+      
+		  // ✅ Datos dinámicos del encabezado
+      const nombre = params.get("sucursalp");
+      const direccion = params.get("dirsucur");
+      const telefono = params.get("phone");
+
+      setText("nombreSucursal", nombre ? "Sucursal " + nombre : "");
+      setText("direccionSucursal", direccion ? "DIR: " + direccion : "");
+      setText("telefonoSucursal", telefono ? "TELÉFONO: " + telefono : "");
+
+
+      // Asignar datos basados en los campos de la imagen
+      // Nota: Uso los nombres exactos de tu imagen (ej. "NombreUM", "Placapm")
+      setText("id_mensualidad", params.get("Id_mensualidad"));
+      setText("nombre_cliente", params.get("NombreUM"));
+      setText("placa_mensualidad", params.get("Placapm"));
+      setText("fecha_inicio", params.get("Fechai_nicial")); // Usando el nombre de la imagen
+      setText("fecha_termino", params.get("Fecha_termino"));
+      setText("valor_pagado", params.get("Valor"));
+      setText("estado_pago", params.get("Estado"));
+      
+      // Manejo de la imagen (opcional, igual que antes)
+      const imagenRuta = params.get("imagen") || "";
+      const imagenElement = document.getElementById("imagenRecibo");
+
+      if (imagenElement) {
+        if (imagenRuta) {
+          imagenElement.src = imagenRuta;
+          imagenElement.style.display = 'block';
+        } else {
+          imagenElement.style.display = 'none';
+        }
+      }
+      
+      // Se llama a la función de imprimir después de cargar todos los datos
+      setTimeout(() => {
+        window.print();
+      }, 100); // 100ms de espera
+    }
+  </script>
+
+</body>
+</html>
