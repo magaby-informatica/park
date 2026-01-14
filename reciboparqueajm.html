@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Recibo de Parqueadero</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.5/JsBarcode.all.min.js"></script>
   <style>
     body {
       font-family: 'Arial', sans-serif;
@@ -58,6 +59,16 @@
       display: none;
     }
 
+    .barcode-container {
+      text-align: center;
+      margin: 10px 0;
+    }
+
+    #barcode {
+      max-width: 100%;
+      height: auto;
+    }
+
     .pie {
       font-size: 16px;
       text-align: center;
@@ -91,6 +102,11 @@
        <div class="item"><span class="label">Precio:</span> <span id="precio"></span></div>
 
     <div class="titulo">----------------------</div>
+
+    <!-- ✅ CÓDIGO DE BARRAS AQUÍ -->
+    <div class="barcode-container">
+      <svg id="barcode"></svg>
+    </div>
 
     <div class="item"><span class="label"><strong>Total:</strong></span> <span id="Total"></span></div>
 
@@ -128,13 +144,27 @@
       setText("telefonoSucursal", telefono ? "TELÉFONO: " + telefono : "");
 
       // ✅ Otros datos
+      const placa = params.get("placa") || "SIN-PLACA";
       setText("norecibo", params.get("norecibo"));
-      setText("placa", params.get("placa"));
+      setText("placa", placa);
       setText("referencia", params.get("referencia"));
       setText("ingreso", params.get("ingreso"));
       setText("salida", params.get("salida"));
       setText("precio", params.get("precio_parqueo"));
       setText("Total", params.get("total"));
+
+      // ✅ Generar código de barras con la placa
+      try {
+        JsBarcode("#barcode", placa, {
+          format: "CODE128",
+          width: 2,
+          height: 50,
+          displayValue: false,
+          margin: 5
+        });
+      } catch (e) {
+        console.error("Error generando código de barras:", e);
+      }
 
       const imagenRuta = params.get("imagen") || "";
       const img = document.getElementById("imagenRecibo");
