@@ -1,1 +1,94 @@
-dddd
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Recibo de Mensualidad</title>
+
+<style>
+body{
+  margin:0;
+  padding:0;
+  font-family:Arial, sans-serif;
+  font-size:12px;
+  font-weight:bold;
+  color:#000;
+}
+
+.recibo{
+  width:52mm;          /* 58mm real */
+  margin:0 auto;
+  padding:2mm 1mm;
+  box-sizing:border-box;
+}
+
+.titulo{text-align:center;margin:2px 0;}
+.item{text-align:center;margin:2px 0;}
+.linea{border-top:1px dashed #000;margin:6px 0;}
+.total{font-size:14px;margin:6px 0;}
+.pie{font-size:11px;text-align:center;margin-top:6px;}
+</style>
+</head>
+
+<body onload="cargar()">
+
+<div class="recibo">
+
+  <div class="titulo" style="font-size:15px;">AMARELOZ</div>
+  <div class="titulo" id="SUCURSAL"></div>
+  <div class="titulo" id="D_SUC"></div>
+  <div class="titulo" id="WhatsApp"></div>
+
+  <div class="titulo">
+    🕑 Lun a Sáb<br>
+    6:45 am – 6:20 pm
+  </div>
+
+  <div class="linea"></div>
+
+  <div class="titulo" style="font-size:14px;">RECIBO DE MENSUALIDAD</div>
+
+  <div class="item">ID: <span id="Id_mensualidad"></span></div>
+  <div class="item">Cliente: <span id="NOMBRE_CLIENTE"></span></div>
+  <div class="item">Placa: <span id="Placapm"></span></div>
+  <div class="item">Inicio: <span id="Fechai_nicial"></span></div>
+  <div class="item">Mes: <span id="Mes"></span></div>
+  <div class="item">Estado: <span id="Estado"></span></div>
+
+  <div class="linea"></div>
+
+  <div class="item total">
+    TOTAL PAGADO<br>
+    $ <span id="Valor"></span>
+  </div>
+
+  <div class="linea"></div>
+
+  <div class="pie">
+    <strong>AVISO IMPORTANTE</strong><br>
+    1. Entrega solo con recibo.<br>
+    2. No se guardan objetos personales.<br>
+    3. No respondemos por pérdidas.<br>
+    4. Retirada la moto no hay reclamos.
+  </div>
+
+</div>
+
+<script>
+function cargar(){
+  const p = new URLSearchParams(location.search);
+  [
+    "Id_mensualidad","NOMBRE_CLIENTE","Placapm",
+    "Fechai_nicial","Mes","Estado",
+    "Valor","SUCURSAL","D_SUC","WhatsApp"
+  ].forEach(id=>{
+    const e=document.getElementById(id);
+    if(e) e.textContent=p.get(id)||"";
+  });
+  setTimeout(()=>window.print(),150);
+}
+</script>
+
+</body>
+</html>
