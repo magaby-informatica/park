@@ -86,55 +86,62 @@
 
   <div class="recibo">
 
-    <!-- ✅ Encabezado corregido -->
     <div class="titulo" style="font-size:16px;">AMARELOZ</div>
-     <div class="titulo" style="font-size:16px;">Nit 16733928-3 </div>
+    <div class="titulo" style="font-size:16px;">Nit 16733928-3</div>
     <div class="titulo" id="nombreSucursal"></div>
     <div class="titulo" id="direccionSucursal"></div>
     <div class="titulo" id="telefonoSucursal"></div>
 
     <div class="titulo">🕑 Horario de atención<br>
-      Lun a Sáb: 6:45 am – 6:20 pm<br>
-         </div>
-    <div class="titulo">----------------------</div>
-
-       <div class="item"><span class="label">Placa:</span> <span id="placa"></span></div>
-      <div class="item"><span class="label">Ingreso:</span> <span id="ingreso"></span></div>
-       <div class="item"><span class="label">Precio:</span> <span id="precio"></span></div>
+      Lun a Sáb: 6:45 am – 6:20 pm
+    </div>
 
     <div class="titulo">----------------------</div>
 
-    <!-- ✅ CÓDIGO DE BARRAS AQUÍ -->
+    <div class="item"><span class="label">Placa:</span> <span id="placa"></span></div>
+
+    <div class="item"><span class="label">Ingreso:</span> <span id="ingreso"></span></div>
+    <div class="item"><span class="label">Nombre:</span> <span id="nombre"></span></div>
+
+    <div class="item"><span class="label">Salida:</span> <span id="salida"></span></div>
+
+    <div class="item"><span class="label">Precio:</span> <span id="precio"></span></div>
+
+    <div class="titulo">----------------------</div>
+
     <div class="barcode-container">
       <svg id="barcode"></svg>
     </div>
 
-    <div class="item"><span class="label"><strong>Total:</strong></span> <span id="Total"></span></div>
+    <div class="item">
+      <span class="label"><strong>Total:</strong></span>
+      <span id="Total"></span>
+    </div>
 
     <div class="imagen-container">
       <img id="imagenRecibo" src="" alt="Imagen del recibo">
     </div>
 
     <div class="linea"></div>
+
     <div class="pie">
       <strong>AVISO IMPORTANTE</strong>
       <div>1. Entrega solo con recibo.</div>
-           <div>2. El parqueadero no responde por pérdida o daños por fuerza mayor/caso fortuito (incendio, terremoto, inundación, asonada u otros) ni por hechos de terceros.</div>
-      <div>3. * Retirada la moto, no se aceptan reclamos.</div>
+      <div>2. El parqueadero no responde por pérdida o daños por fuerza mayor/caso fortuito (incendio, terremoto, inundación, asonada u otros) ni por hechos de terceros.</div>
+      <div>3. Retirada la moto, no se aceptan reclamos.</div>
     </div>
+
   </div>
 
   <script>
     function cargarDatosYImprimir() {
       const params = new URLSearchParams(window.location.search);
 
-      // Función auxiliar
       const setText = (id, value) => {
         const el = document.getElementById(id);
         if (el) el.textContent = value || "";
       };
 
-      // ✅ Datos dinámicos del encabezado
       const nombre = params.get("sucursalp");
       const direccion = params.get("dirsucur");
       const telefono = params.get("phone");
@@ -143,17 +150,15 @@
       setText("direccionSucursal", direccion ? "DIR: " + direccion : "");
       setText("telefonoSucursal", telefono ? "TELÉFONO: " + telefono : "");
 
-      // ✅ Otros datos
       const placa = params.get("placa") || "SIN-PLACA";
-      setText("norecibo", params.get("norecibo"));
+
       setText("placa", placa);
-      setText("referencia", params.get("referencia"));
       setText("ingreso", params.get("ingreso"));
+      setText("nombre", params.get("nombre"));
       setText("salida", params.get("salida"));
       setText("precio", params.get("precio_parqueo"));
       setText("Total", params.get("total"));
 
-      // ✅ Generar código de barras con la placa
       try {
         JsBarcode("#barcode", placa, {
           format: "CODE128",
@@ -168,6 +173,7 @@
 
       const imagenRuta = params.get("imagen") || "";
       const img = document.getElementById("imagenRecibo");
+
       if (img) {
         if (imagenRuta) {
           img.src = imagenRuta;
