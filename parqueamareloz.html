@@ -82,6 +82,7 @@
     }
   </style>
 </head>
+
 <body onload="cargarDatosYImprimir()">
 
   <div class="recibo">
@@ -92,7 +93,8 @@
     <div class="titulo" id="direccionSucursal"></div>
     <div class="titulo" id="telefonoSucursal"></div>
 
-    <div class="titulo">🕑 Horario de atención<br>
+    <div class="titulo">
+      🕑 Horario de atención<br>
       Lun a Sáb: 6:45 am – 6:20 pm
     </div>
 
@@ -101,7 +103,11 @@
     <div class="item"><span class="label">Placa:</span> <span id="placa"></span></div>
 
     <div class="item"><span class="label">Ingreso:</span> <span id="ingreso"></span></div>
-    <div class="item"><span class="label">Nombre:</span> <span id="nombre"></span></div>
+
+    <!-- 👇 SOLO SE MUESTRA SI VIENE NOMBRE -->
+    <div class="item" id="rowNombre">
+      <span class="label">Nombre:</span> <span id="nombre"></span>
+    </div>
 
     <div class="item"><span class="label">Salida:</span> <span id="salida"></span></div>
 
@@ -127,7 +133,10 @@
     <div class="pie">
       <strong>AVISO IMPORTANTE</strong>
       <div>1. Entrega solo con recibo.</div>
-      <div>2. El parqueadero no responde por pérdida o daños por fuerza mayor/caso fortuito (incendio, terremoto, inundación, asonada u otros) ni por hechos de terceros.</div>
+      <div>
+        2. El parqueadero no responde por pérdida o daños por fuerza mayor/caso fortuito
+        (incendio, terremoto, inundación, asonada u otros) ni por hechos de terceros.
+      </div>
       <div>3. Retirada la moto, no se aceptan reclamos.</div>
     </div>
 
@@ -142,11 +151,11 @@
         if (el) el.textContent = value || "";
       };
 
-      const nombre = params.get("sucursalp");
+      const nombreSucursal = params.get("sucursalp");
       const direccion = params.get("dirsucur");
       const telefono = params.get("phone");
 
-      setText("nombreSucursal", nombre ? "Sucursal " + nombre : "");
+      setText("nombreSucursal", nombreSucursal ? "Sucursal " + nombreSucursal : "");
       setText("direccionSucursal", direccion ? "DIR: " + direccion : "");
       setText("telefonoSucursal", telefono ? "TELÉFONO: " + telefono : "");
 
@@ -158,6 +167,11 @@
       setText("salida", params.get("salida"));
       setText("precio", params.get("precio_parqueo"));
       setText("Total", params.get("total"));
+
+      // 🔒 Ocultar fila Nombre si viene vacío
+      if (!params.get("nombre")) {
+        document.getElementById("rowNombre").style.display = "none";
+      }
 
       try {
         JsBarcode("#barcode", placa, {
@@ -189,3 +203,4 @@
 
 </body>
 </html>
+
