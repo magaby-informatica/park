@@ -5,202 +5,114 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Recibo de Parqueadero</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.5/JsBarcode.all.min.js"></script>
+
   <style>
     body {
-      font-family: 'Arial', sans-serif;
+      font-family: Arial, sans-serif;
       font-size: 18px;
       font-weight: bold;
-      color: #000000;
       margin: 0;
       padding: 0;
       text-align: center;
     }
 
     @media print {
-      body {
-        margin: 0;
-        padding: 0;
-        width: 80mm;
-      }
+      body { width: 80mm; }
     }
 
-    .recibo {
-      width: 80mm;
-      padding: 5px;
-      margin: 0 auto;
-      box-sizing: border-box;
-      text-align: center;
-    }
-
-    .titulo {
-      text-align: center;
-      margin-bottom: 2px;
-    }
-
-    .item {
-      margin-bottom: 5px;
-      text-align: center;
-    }
-
-    .linea {
-      border-top: 1px dashed #000;
-      margin: 10px 0;
-    }
-
-    .imagen-container {
-      text-align: center;
-      margin-top: 10px;
-      margin-bottom: 10px;
-    }
-
-    .imagen-container img {
-      max-width: 100%;
-      height: auto;
-      display: none;
-    }
-
-    .barcode-container {
-      text-align: center;
-      margin: 10px 0;
-    }
-
-    #barcode {
-      max-width: 100%;
-      height: auto;
-    }
-
-    .pie {
-      font-size: 16px;
-      text-align: center;
-      margin-top: 10px;
-    }
-
-    .pie strong {
-      display: block;
-      text-align: center;
-      margin-bottom: 5px;
-    }
+    .recibo { width: 80mm; padding: 5px; margin: auto; }
+    .titulo { margin-bottom: 2px; }
+    .item { margin-bottom: 5px; }
+    .linea { border-top: 1px dashed #000; margin: 10px 0; }
+    .barcode-container { margin: 10px 0; }
+    .pie { font-size: 16px; margin-top: 10px; }
   </style>
 </head>
 
 <body onload="cargarDatosYImprimir()">
 
-  <div class="recibo">
+<div class="recibo">
 
-    <div class="titulo" style="font-size:16px;">AMARELOZ</div>
-    <div class="titulo" style="font-size:16px;">Nit 16733928-3</div>
-    <div class="titulo" id="nombreSucursal"></div>
-    <div class="titulo" id="direccionSucursal"></div>
-    <div class="titulo" id="telefonoSucursal"></div>
+  <div class="titulo">AMARELOZ</div>
+  <div class="titulo">Nit 16733928-3</div>
 
-    <div class="titulo">
-      🕑 Horario de atención<br>
-      Lun a Sáb: 6:45 am – 6:20 pm
-    </div>
+  <div class="titulo" id="nombreSucursal"></div>
+  <div class="titulo" id="direccionSucursal"></div>
+  <div class="titulo" id="telefonoSucursal"></div>
 
-    <div class="titulo">----------------------</div>
-
-    <div class="item"><span class="label">Placa:</span> <span id="placa"></span></div>
-
-    <div class="item"><span class="label">Ingreso:</span> <span id="ingreso"></span></div>
-
-    <!-- 👇 SOLO SE MUESTRA SI VIENE NOMBRE -->
-    <div class="item" id="rowNombre">
-      <span class="label">Nombre:</span> <span id="nombre"></span>
-    </div>
-
-    <div class="item"><span class="label">Salida:</span> <span id="salida"></span></div>
-
-    <div class="item"><span class="label">Precio:</span> <span id="precio"></span></div>
-
-    <div class="titulo">----------------------</div>
-
-    <div class="barcode-container">
-      <svg id="barcode"></svg>
-    </div>
-
-    <div class="item">
-      <span class="label"><strong>Total:</strong></span>
-      <span id="Total"></span>
-    </div>
-
-    <div class="imagen-container">
-      <img id="imagenRecibo" src="" alt="Imagen del recibo">
-    </div>
-
-    <div class="linea"></div>
-
-    <div class="pie">
-      <strong>AVISO IMPORTANTE</strong>
-      <div>1. Entrega solo con recibo.</div>
-      <div>
-        2. El parqueadero no responde por pérdida o daños por fuerza mayor/caso fortuito
-        (incendio, terremoto, inundación, asonada u otros) ni por hechos de terceros.
-      </div>
-      <div>3. Retirada la moto, no se aceptan reclamos.</div>
-    </div>
-
+  <div class="titulo">
+    🕑 Horario de atención<br>
+    Lun a Sáb: 6:45 am – 6:20 pm
   </div>
 
-  <script>
-    function cargarDatosYImprimir() {
-      const params = new URLSearchParams(window.location.search);
+  <div class="titulo">----------------------</div>
 
-      const setText = (id, value) => {
-        const el = document.getElementById(id);
-        if (el) el.textContent = value || "";
-      };
+  <div class="item">Placa: <span id="placa"></span></div>
+  <div class="item">Ingreso: <span id="ingreso"></span></div>
 
-      const nombreSucursal = params.get("sucursalp");
-      const direccion = params.get("dirsucur");
-      const telefono = params.get("phone");
+  <!-- SOLO SI VIENE NOMBRE -->
+  <div class="item" id="rowNombre">
+    Nombre: <span id="nombre"></span>
+  </div>
 
-      setText("nombreSucursal", nombreSucursal ? "Sucursal " + nombreSucursal : "");
-      setText("direccionSucursal", direccion ? "DIR: " + direccion : "");
-      setText("telefonoSucursal", telefono ? "TELÉFONO: " + telefono : "");
+  <div class="item">Salida: <span id="salida"></span></div>
+  <div class="item">Precio: <span id="precio"></span></div>
 
-      const placa = params.get("placa") || "SIN-PLACA";
+  <div class="titulo">----------------------</div>
 
-      setText("placa", placa);
-      setText("ingreso", params.get("ingreso"));
-      setText("nombre", params.get("nombre"));
-      setText("salida", params.get("salida"));
-      setText("precio", params.get("precio_parqueo"));
-      setText("Total", params.get("total"));
+  <div class="barcode-container">
+    <svg id="barcode"></svg>
+  </div>
 
-      // 🔒 Ocultar fila Nombre si viene vacío
-      if (!params.get("nombre")) {
-        document.getElementById("rowNombre").style.display = "none";
-      }
+  <div class="item"><strong>Total:</strong> <span id="total"></span></div>
 
-      try {
-        JsBarcode("#barcode", placa, {
-          format: "CODE128",
-          width: 2,
-          height: 50,
-          displayValue: false,
-          margin: 5
-        });
-      } catch (e) {
-        console.error("Error generando código de barras:", e);
-      }
+  <div class="linea"></div>
 
-      const imagenRuta = params.get("imagen") || "";
-      const img = document.getElementById("imagenRecibo");
+  <div class="pie">
+    <strong>AVISO IMPORTANTE</strong>
+    <div>1. Entrega solo con recibo.</div>
+    <div>2. El parqueadero no responde por daños o pérdidas.</div>
+    <div>3. Retirada la moto no se aceptan reclamos.</div>
+  </div>
 
-      if (img) {
-        if (imagenRuta) {
-          img.src = imagenRuta;
-          img.style.display = "block";
-        } else {
-          img.style.display = "none";
-        }
-      }
+</div>
 
-      setTimeout(() => window.print(), 100);
-    }
-  </script>
+<script>
+function cargarDatosYImprimir() {
+  const p = new URLSearchParams(window.location.search);
+
+  const set = (id, val) => {
+    const e = document.getElementById(id);
+    if (e) e.textContent = val || "";
+  };
+
+  set("nombreSucursal", p.get("sucursalp") ? "Sucursal " + p.get("sucursalp") : "");
+  set("direccionSucursal", p.get("dirsucur") ? "DIR: " + p.get("dirsucur") : "");
+  set("telefonoSucursal", p.get("phone") ? "TEL: " + p.get("phone") : "");
+
+  set("placa", p.get("placa"));
+  set("ingreso", p.get("ingreso"));
+  set("nombre", p.get("nombre"));
+  set("salida", p.get("salida"));
+  set("precio", p.get("precio_parqueo"));
+  set("total", p.get("total"));
+
+  if (!p.get("nombre")) {
+    document.getElementById("rowNombre").style.display = "none";
+  }
+
+  try {
+    JsBarcode("#barcode", p.get("placa") || "SINPLACA", {
+      format: "CODE128",
+      width: 2,
+      height: 50,
+      displayValue: false
+    });
+  } catch {}
+
+  setTimeout(() => window.print(), 100);
+}
+</script>
 
 </body>
 </html>
-
