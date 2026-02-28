@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recibo de Parqueadero</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      font-size: 14px;
+      font-weight: bold;
+      color: #000000;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    @media print {
+      body {
+        margin: 0;
+        padding: 0;
+        width: 58mm;
+      }
+    }
+
+    .recibo {
+      width: 58mm;
+      padding: 5px;
+      margin: 0 auto;
+      box-sizing: border-box;
+      text-align: center;
+    }
+
+    .titulo {
+      text-align: center;
+      margin-bottom: 2px;
+    }
+
+    .item {
+      margin-bottom: 5px;
+      text-align: center;
+    }
+
+    .linea {
+      border-top: 1px dashed #000;
+      margin: 10px 0;
+    }
+
+    .imagen-container {
+      text-align: center;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+
+    .imagen-container img {
+      max-width: 100%;
+      height: auto;
+      display: none;
+    }
+
+    .pie {
+      font-size: 14px;
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .pie strong {
+      display: block;
+      text-align: center;
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body onload="cargarDatosYImprimir()">
+
+  <div class="recibo">
+
+    <!-- ✅ Encabezado corregido -->
+    <div class="titulo" style="font-size:22px;">PARQUEADERO</div>
+    <div class="titulo" id="nombreSucursal"></div>
+    <div class="titulo" id="direccionSucursal"></div>
+    <div class="titulo" id="telefonoSucursal"></div>
+
+    <div class="titulo">🕑 Horario de atención<br>
+      Lun a Sáb: 7:00 am – 7:00 pm<br>
+      Domingos: 8:00 am – 2:00 pm
+    </div>
+    <div class="titulo">--------------------------------------------------</div>
+
+    <div class="item"><span class="label">Recibo:</span> <span id="norecibo"></span></div>
+    <div class="item"><span class="label">Placa:</span> <span id="placa"></span></div>
+    <div class="item"><span class="label">Referencia:</span> <span id="referencia"></span></div>
+    <div class="item"><span class="label">Ingreso:</span> <span id="ingreso"></span></div>
+    <div class="item"><span class="label">Salida:</span> <span id="salida"></span></div>
+    <div class="item"><span class="label">Precio:</span> <span id="precio"></span></div>
+
+    <div class="titulo">--------------------------------------------------</div>
+
+    <div class="item"><span class="label"><strong>Total:</strong></span> <span id="Total"></span></div>
+
+    <div class="imagen-container">
+      <img id="imagenRecibo" src="" alt="Imagen del recibo">
+    </div>
+
+    <div class="linea"></div>
+    <div class="pie">
+      <strong>AVISO IMPORTANTE</strong>
+      <div>1. No respondemos por objetos dejados en la moto.</div>
+      <div>2. Solo respondemos por pérdida de cascos entregados en custodia.</div>
+      <div>3. Para retirar tu moto presenta este tiquet.</div>
+    </div>
+  </div>
+
+  <script>
+    function cargarDatosYImprimir() {
+      const params = new URLSearchParams(window.location.search);
+
+      // Función auxiliar
+      const setText = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value || "";
+      };
+
+      // ✅ Datos dinámicos del encabezado
+      const nombre = params.get("sucursalp");
+      const direccion = params.get("dirsucur");
+      const telefono = params.get("phone");
+
+      setText("nombreSucursal", nombre ? "PARQUEADERO " + nombre : "");
+      setText("direccionSucursal", direccion ? "DIR: " + direccion : "");
+      setText("telefonoSucursal", telefono ? "TELÉFONO: " + telefono : "");
+
+      // ✅ Otros datos
+      setText("norecibo", params.get("norecibo"));
+      setText("placa", params.get("placa"));
+      setText("referencia", params.get("referencia"));
+      setText("ingreso", params.get("ingreso"));
+      setText("salida", params.get("salida"));
+      setText("precio", params.get("precio_parqueo"));
+      setText("Total", params.get("total"));
+
+      const imagenRuta = params.get("imagen") || "";
+      const img = document.getElementById("imagenRecibo");
+      if (img) {
+        if (imagenRuta) {
+          img.src = imagenRuta;
+          img.style.display = "block";
+        } else {
+          img.style.display = "none";
+        }
+      }
+
+      setTimeout(() => window.print(), 100);
+    }
+  </script>
+
+</body>
+</html>
