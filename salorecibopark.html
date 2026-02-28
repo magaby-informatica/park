@@ -6,76 +6,60 @@
 <title>Recibo Parqueadero</title>
 
 <style>
-body {
+body{
   font-family: Arial, sans-serif;
-  font-size: 14px;
-  font-weight: bold;
-  color: #000;
-  margin: 0;
-  padding: 0;
-  text-align: center;
+  font-size:14px;
+  font-weight:bold;
+  text-align:center;
+  margin:0;
+  padding:0;
 }
 
-@media print {
-  body {
-    width: 58mm;
-    margin: 0;
+@media print{
+  body{
+    width:58mm;
+    margin:0;
   }
 }
 
-.recibo {
-  width: 58mm;
-  padding: 5px;
-  margin: 0 auto;
-  box-sizing: border-box;
+.recibo{
+  width:58mm;
+  padding:5px;
+  margin:0 auto;
+  box-sizing:border-box;
 }
 
-.titulo {
-  margin-bottom: 4px;
+.titulo-principal{
+  font-size:20px;
+  margin-bottom:5px;
 }
 
-.item {
-  margin-bottom: 5px;
+.linea{
+  border-top:1px dashed #000;
+  margin:8px 0;
 }
 
-.linea {
-  border-top: 1px dashed #000;
-  margin: 8px 0;
+.item{
+  margin-bottom:5px;
 }
 
-.imagen-container {
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
-.imagen-container img {
-  max-width: 100%;
-  height: auto;
-  display: none;
-}
-
-.pie {
-  font-size: 13px;
-  margin-top: 10px;
-}
-
-.pie strong {
-  display: block;
-  margin-bottom: 5px;
+.pie{
+  margin-top:10px;
+  font-size:13px;
 }
 </style>
 </head>
 
-<body onload="cargarDatosYImprimir()">
+<body onload="cargarDatos()">
 
 <div class="recibo">
 
-  <!-- ENCABEZADO DINÁMICO -->
-  <div class="titulo" id="nombreSucursal" style="font-size:20px;"></div>
-  <div class="titulo" id="direccionSucursal"></div>
-  <div class="titulo" id="telefonoSucursal"></div>
+  <!-- EMPRESA + SUCURSAL -->
+  <div id="empresaSucursal" class="titulo-principal"></div>
+  <div id="direccion"></div>
+  <div id="telefono"></div>
 
-  <div class="titulo">
+  <div>
     🕑 Horario de atención<br>
     Lun a Sáb: 7:00 am – 7:00 pm<br>
     Domingos: 8:00 am – 2:00 pm
@@ -83,7 +67,6 @@ body {
 
   <div class="linea"></div>
 
-  <!-- DATOS DEL RECIBO -->
   <div class="item">Recibo: <span id="norecibo"></span></div>
   <div class="item">Placa: <span id="placa"></span></div>
   <div class="item">Ingreso: <span id="ingreso"></span></div>
@@ -94,62 +77,44 @@ body {
 
   <div class="item"><strong>Total: <span id="total"></span></strong></div>
 
-  <!-- IMAGEN OPCIONAL -->
-  <div class="imagen-container">
-    <img id="imagenRecibo" src="">
-  </div>
-
   <div class="linea"></div>
 
   <div class="pie">
-    <strong>AVISO IMPORTANTE</strong>
-    <div>1. No respondemos por objetos dejados en la moto.</div>
-    <div>2. Solo respondemos por pérdida de cascos entregados en custodia.</div>
-    <div>3. Para retirar tu moto presenta este tiquet.</div>
+    <strong>AVISO IMPORTANTE</strong><br>
+    1. No respondemos por objetos dejados en la moto.<br>
+    2. Solo respondemos por pérdida de cascos entregados en custodia.<br>
+    3. Para retirar tu moto presenta este tiquet.
   </div>
 
 </div>
 
 <script>
-function cargarDatosYImprimir() {
+function cargarDatos(){
 
   const params = new URLSearchParams(window.location.search);
 
-  function setText(id, value) {
-    const el = document.getElementById(id);
-    if (el) el.textContent = value || "";
-  }
+  const empresa = decodeURIComponent(params.get("empresa") || "");
+  const sucursal = decodeURIComponent(params.get("sucursal") || "");
+  const direccion = decodeURIComponent(params.get("direccion") || "");
+  const telefono = decodeURIComponent(params.get("telefono") || "");
 
-  // ENCABEZADO
-  const sucursal = decodeURIComponent(params.get("sucursalp") || "");
-  const direccion = decodeURIComponent(params.get("dirsucur") || "");
-  const telefono = decodeURIComponent(params.get("phone") || "");
+  document.getElementById("empresaSucursal").textContent =
+      empresa + " " + sucursal;
 
-  setText("nombreSucursal", sucursal ? "PARQUEADERO " + sucursal : "PARQUEADERO");
-  setText("direccionSucursal", direccion ? "DIR: " + direccion : "");
-  setText("telefonoSucursal", telefono ? "TEL: " + telefono : "");
+  document.getElementById("direccion").textContent =
+      direccion ? "DIR: " + direccion : "";
 
-  // DATOS
-  setText("norecibo", params.get("norecibo"));
-  setText("placa", params.get("placa"));
-  setText("ingreso", params.get("ingreso"));
-  setText("salida", params.get("salida"));
-  setText("precio", params.get("precio_parqueo"));
-  setText("total", params.get("total"));
+  document.getElementById("telefono").textContent =
+      telefono ? "TELÉFONO: " + telefono : "";
 
-  // IMAGEN
-  const imagenRuta = params.get("imagen") || "";
-  const img = document.getElementById("imagenRecibo");
+  document.getElementById("norecibo").textContent = params.get("norecibo") || "";
+  document.getElementById("placa").textContent = params.get("placa") || "";
+  document.getElementById("ingreso").textContent = params.get("ingreso") || "";
+  document.getElementById("salida").textContent = params.get("salida") || "";
+  document.getElementById("precio").textContent = params.get("precio") || "";
+  document.getElementById("total").textContent = params.get("total") || "";
 
-  if (imagenRuta) {
-    img.src = imagenRuta;
-    img.style.display = "block";
-  } else {
-    img.style.display = "none";
-  }
-
-  // IMPRIMIR
-  setTimeout(() => window.print(), 300);
+  setTimeout(()=>window.print(),300);
 }
 </script>
 
