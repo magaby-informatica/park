@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recibo Parqueadero</title>
+
+<style>
+body{
+  font-family: Arial, sans-serif;
+  font-size:14px;
+  font-weight:bold;
+  text-align:center;
+  margin:0;
+  padding:0;
+}
+
+@media print{
+  body{
+    width:58mm;
+    margin:0;
+  }
+}
+
+.recibo{
+  width:58mm;
+  padding:5px;
+  margin:0 auto;
+  box-sizing:border-box;
+}
+
+.titulo-principal{
+  font-size:20px;
+  margin-bottom:5px;
+}
+
+.linea{
+  border-top:1px dashed #000;
+  margin:8px 0;
+}
+
+.item{
+  margin-bottom:5px;
+}
+
+.pie{
+  margin-top:10px;
+  font-size:13px;
+}
+</style>
+</head>
+
+<body onload="cargarDatos()">
+
+<div class="recibo">
+
+  <!-- EMPRESA + SUCURSAL -->
+  <div id="empresaSucursal" class="titulo-principal"></div>
+  <div id="direccion"></div>
+  <div id="telefono"></div>
+
+  <div>
+    🕑 Horario de atención<br>
+    Lun a Sáb: 7:00 am – 8:00 pm  
+  </div>
+
+  <div class="linea"></div>
+
+  <!-- AQUÍ CAMBIAN LOS DATOS -->
+  <div class="item">Recibo: <span id="id_mensualidad"></span></div>
+  <div class="item">Placa: <span id="placa"></span></div>
+  <div class="item">Modalidad: <span id="modalidad"></span></div>
+  <div class="item">Fecha Inicio: <span id="fecha_inicio"></span></div>
+  <div class="item">Fecha Fin: <span id="fecha_fin"></span></div>
+
+  <div class="linea"></div>
+
+  <div class="item">Estado: <span id="estado"></span></div>
+  <div class="item"><strong>Total: <span id="valor"></span></strong></div>
+
+  <div class="linea"></div>
+
+  <div class="pie">
+    <strong>AVISO IMPORTANTE</strong><br>
+    1. No respondemos por objetos dejados en la moto.<br>
+    2. Solo respondemos por pérdida de cascos entregados en custodia.<br>
+    3. Para cualquier reclamación presentar este recibo.
+  </div>
+
+</div>
+
+<script>
+function cargarDatos(){
+
+  const params = new URLSearchParams(window.location.search);
+
+  // EMPRESA (igual que antes)
+  const empresa = decodeURIComponent(params.get("empresa") || "");
+  const sucursal = decodeURIComponent(params.get("sucursal") || "");
+  const direccion = decodeURIComponent(params.get("direccion") || "");
+  const telefono = decodeURIComponent(params.get("telefono") || "");
+
+  document.getElementById("empresaSucursal").textContent =
+      empresa + " " + sucursal;
+
+  document.getElementById("direccion").textContent =
+      direccion ? "DIR: " + direccion : "";
+
+  document.getElementById("telefono").textContent =
+      telefono ? "TELÉFONO: " + telefono : "";
+
+  // DATOS DE MENSUALIDADES
+  document.getElementById("id_mensualidad").textContent =
+      params.get("id_mensualidad") || "";
+
+  document.getElementById("placa").textContent =
+      params.get("placa") || "";
+
+  document.getElementById("modalidad").textContent =
+      params.get("modalidad") || "";
+
+  document.getElementById("fecha_inicio").textContent =
+      params.get("fecha_inicio") || "";
+
+  document.getElementById("fecha_fin").textContent =
+      params.get("fecha_fin") || "";
+
+  document.getElementById("estado").textContent =
+      params.get("estado") || "";
+
+  document.getElementById("valor").textContent =
+      params.get("valor") || "";
+
+  setTimeout(()=>window.print(),300);
+}
+</script>
+
+</body>
+</html>
