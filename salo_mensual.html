@@ -61,21 +61,19 @@ body{
 
   <div>
     🕑 Horario de atención<br>
-    Lun a Sáb: 7:00 am – 8:00 pm  
+    Lun a Sáb: 7:00 am – 8:00 pm
   </div>
 
   <div class="linea"></div>
 
-  <!-- AQUÍ CAMBIAN LOS DATOS -->
-  <div class="item">Recibo: <span id="id_mensualidad"></span></div>
+  <div class="item">Recibo: <span id="norecibo"></span></div>
   <div class="item">Placa: <span id="placa"></span></div>
+  <div class="item">Fecha Inicio: <span id="fechainicio"></span></div>
+  <div class="item">Fecha Fin: <span id="fechafin"></span></div>
   <div class="item">Modalidad: <span id="modalidad"></span></div>
-  <div class="item">Fecha Inicio: <span id="fecha_inicio"></span></div>
-  <div class="item">Fecha Fin: <span id="fecha_fin"></span></div>
 
   <div class="linea"></div>
 
-  <div class="item">Estado: <span id="estado"></span></div>
   <div class="item"><strong>Total: <span id="valor"></span></strong></div>
 
   <div class="linea"></div>
@@ -84,7 +82,7 @@ body{
     <strong>AVISO IMPORTANTE</strong><br>
     1. No respondemos por objetos dejados en la moto.<br>
     2. Solo respondemos por pérdida de cascos entregados en custodia.<br>
-    3. Para cualquier reclamación presentar este recibo.
+    3. Para retirar tu moto presenta este tiquet.
   </div>
 
 </div>
@@ -94,7 +92,6 @@ function cargarDatos(){
 
   const params = new URLSearchParams(window.location.search);
 
-  // EMPRESA (igual que antes)
   const empresa = decodeURIComponent(params.get("empresa") || "");
   const sucursal = decodeURIComponent(params.get("sucursal") || "");
   const direccion = decodeURIComponent(params.get("direccion") || "");
@@ -109,24 +106,20 @@ function cargarDatos(){
   document.getElementById("telefono").textContent =
       telefono ? "TELÉFONO: " + telefono : "";
 
-  // DATOS DE MENSUALIDADES
-  document.getElementById("id_mensualidad").textContent =
-      params.get("id_mensualidad") || "";
+  document.getElementById("norecibo").textContent =
+      params.get("recibo") || "";
 
   document.getElementById("placa").textContent =
       params.get("placa") || "";
 
+  document.getElementById("fechainicio").textContent =
+      params.get("inicio") || "";
+
+  document.getElementById("fechafin").textContent =
+      params.get("fin") || "";
+
   document.getElementById("modalidad").textContent =
       params.get("modalidad") || "";
-
-  document.getElementById("fecha_inicio").textContent =
-      params.get("fecha_inicio") || "";
-
-  document.getElementById("fecha_fin").textContent =
-      params.get("fecha_fin") || "";
-
-  document.getElementById("estado").textContent =
-      params.get("estado") || "";
 
   document.getElementById("valor").textContent =
       params.get("valor") || "";
