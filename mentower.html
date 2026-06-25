@@ -1,93 +1,121 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recibo de Parqueadero</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.5/JsBarcode.all.min.js"></script>
 
-<title>Recibo de Mensualidad</title>
+  <style>
 
-<style>
-body{
-  margin:0;
-  padding:0;
-  font-family:Arial, sans-serif;
-  font-size:12px;
-  font-weight:bold;
-  color:#000;
-}
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 18px;
+      font-weight: bold;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
 
-.recibo{
-  width:52mm;          /* 58mm real */
-  margin:0 auto;
-  padding:2mm 1mm;
-  box-sizing:border-box;
-}
+    @media print {
+      body { width: 80mm; }
+    }
 
-.titulo{text-align:center;margin:2px 0;}
-.item{text-align:center;margin:2px 0;}
-.linea{border-top:1px dashed #000;margin:6px 0;}
-.total{font-size:14px;margin:6px 0;}
-.pie{font-size:11px;text-align:center;margin-top:6px;}
-</style>
+    .recibo { width: 80mm; padding: 5px; margin: auto; }
+    .titulo { margin-bottom: 2px; }
+    .item { margin-bottom: 5px; }
+    .linea { border-top: 1px dashed #000; margin: 10px 0; }
+    .barcode-container { margin: 10px 0; }
+    .pie { font-size: 16px; margin-top: 10px; }
+  </style>
 </head>
 
-<body onload="cargar()">
+<body onload="cargarDatosYImprimir()">
 
 <div class="recibo">
 
-  <div class="titulo" style="font-size:15px;">TOWER PARK</div>
-  <div class="titulo" style="font-size:12px;">Nit. 16501699-6</div>
-  <div class="titulo" id="SUCURSAL"></div>
-  <div class="titulo" id="D_SUC"></div>
-  <div class="titulo" id="WhatsApp"></div>
+  <div class="titulo">TOWER PARK</div>
+  <div class="titulo">Nit 16501699-6</div>
+
+  <div class="titulo" id="nombreSucursal"></div>
+  <div class="titulo" id="direccionSucursal"></div>
+  <div class="titulo" id="telefonoSucursal"></div>
 
   <div class="titulo">
-    🕑 Lun a Sáb<br>
-    6:45 am – 6:20 pm
+    🕑 Horario de atención<br>
+    Lun a Sáb: 6:45 am – 7:20 pm
   </div>
 
-  <div class="linea"></div>
+  <div class="titulo">----------------------</div>
 
-  <div class="titulo" style="font-size:14px;">RECIBO DE MENSUALIDAD</div>
+  <div class="item">Consecutivo: <span id="Indice"></span></div>
+  <div class="item">Placa: <span id="placa"></span></div>
+  <div class="item">P/C: <span id="p_c"></span></div>
+  <div class="item">Ingreso: <span id="ingreso"></span></div>
 
-  <div class="item">ID: <span id="Id_mensualidad"></span></div>
-  <div class="item">Cliente: <span id="NOMBRE_CLIENTE"></span></div>
-  <div class="item">Placa: <span id="Placapm"></span></div>
-  <div class="item">Inicio: <span id="Fechai_nicial"></span></div>
-  <div class="item">Fin: <span id="Mes"></span></div>
-  <div class="item">Estado: <span id="Estado"></span></div>
-
-  <div class="linea"></div>
-
-  <div class="item total">
-    TOTAL PAGADO<br>
-    $ <span id="Valor"></span>
+  <!-- SOLO SI VIENE NOMBRE -->
+  <div class="item" id="rowNombre">
+    Nombre: <span id="nombre"></span>
   </div>
+
+  <div class="item">Salida: <span id="salida"></span></div>
+  <div class="item">Precio: <span id="precio"></span></div>
+
+  <div class="titulo">----------------------</div>
+
+  <div class="barcode-container">
+    <svg id="barcode"></svg>
+  </div>
+
+  <div class="item"><strong>Total:</strong> <span id="total"></span></div>
 
   <div class="linea"></div>
 
   <div class="pie">
-    <strong>AVISO IMPORTANTE</strong><br>
-    1. Entrega solo con recibo.<br>
-    2. No se guardan objetos personales.<br>
-    3. No respondemos por pérdidas.<br>
-    4. Retirada la moto no hay reclamos.
+    <strong>AVISO IMPORTANTE</strong>
+    <div>1. Entrega solo con recibo.</div>
+    <div>2. El parqueadero no responde por daños o pérdidas.</div>
+    <div>3. Retirada la moto no se aceptan reclamos.</div>
   </div>
 
 </div>
 
 <script>
-function cargar(){
-  const p = new URLSearchParams(location.search);
-  [
-    "Id_mensualidad","NOMBRE_CLIENTE","Placapm",
-    "Fechai_nicial","Mes","Estado",
-    "Valor","SUCURSAL","D_SUC","WhatsApp"
-  ].forEach(id=>{
-    const e=document.getElementById(id);
-    if(e) e.textContent=p.get(id)||"";
-  });
-  setTimeout(()=>window.print(),150);
+function cargarDatosYImprimir() {
+  const p = new URLSearchParams(window.location.search);
+
+  const set = (id, val) => {
+    const e = document.getElementById(id);
+    if (e) e.textContent = val || "";
+  };
+
+  set("nombreSucursal", p.get("sucursalp") ? "Sucursal " + p.get("sucursalp") : "");
+  set("direccionSucursal", p.get("dirsucur") ? "DIR: " + p.get("dirsucur") : "");
+  set("telefonoSucursal", p.get("phone") ? "TEL: " + p.get("phone") : "");
+
+  set("Indice", p.get("indice"));
+  set("placa", p.get("placa"));
+  set("p_c", p.get("p_c"));
+  set("ingreso", p.get("ingreso"));
+  set("nombre", p.get("nombre"));
+  set("salida", p.get("salida"));
+  set("precio", p.get("precio_parqueo"));
+  set("total", p.get("total"));
+
+  if (!p.get("nombre")) {
+    document.getElementById("rowNombre").style.display = "none";
+  }
+
+  try {
+    JsBarcode("#barcode", p.get("placa") || "SINPLACA", {
+      format: "CODE128",
+      width: 2,
+      height: 50,
+      displayValue: false
+    });
+  } catch {}
+
+  setTimeout(() => window.print(), 100);
 }
 </script>
 
