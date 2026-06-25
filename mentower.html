@@ -1,122 +1,118 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Recibo de Parqueadero</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.5/JsBarcode.all.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recibo Mensualidad</title>
 
-  <style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.5/JsBarcode.all.min.js"></script>
 
-    body {
-      font-family: Arial, sans-serif;
-      font-size: 18px;
-      font-weight: bold;
-      margin: 0;
-      padding: 0;
-      text-align: center;
-    }
+<style>
+body{
+    font-family:Arial,sans-serif;
+    font-size:18px;
+    font-weight:bold;
+    margin:0;
+    padding:0;
+    text-align:center;
+}
+@media print{
+    body{width:80mm;}
+}
+.recibo{width:80mm;padding:5px;margin:auto;}
+.titulo{margin-bottom:2px;}
+.item{margin-bottom:5px;}
+.linea{border-top:1px dashed #000;margin:10px 0;}
+.barcode-container{margin:10px 0;}
+.pie{font-size:16px;margin-top:10px;}
+</style>
 
-    @media print {
-      body { width: 80mm; }
-    }
-
-    .recibo { width: 80mm; padding: 5px; margin: auto; }
-    .titulo { margin-bottom: 2px; }
-    .item { margin-bottom: 5px; }
-    .linea { border-top: 1px dashed #000; margin: 10px 0; }
-    .barcode-container { margin: 10px 0; }
-    .pie { font-size: 16px; margin-top: 10px; }
-  </style>
 </head>
 
 <body onload="cargarDatosYImprimir()">
 
 <div class="recibo">
 
-  <div class="titulo">TOWER PARK</div>
-  <div class="titulo">Nit 16501699-6</div>
+<div class="titulo">TOWER PARK</div>
+<div class="titulo">Nit 16501699-6</div>
 
-  <div class="titulo" id="nombreSucursal"></div>
-  <div class="titulo" id="direccionSucursal"></div>
-  <div class="titulo" id="telefonoSucursal"></div>
+<div class="titulo" id="sucursal"></div>
+<div class="titulo" id="direccion"></div>
 
-  <div class="titulo">
-    🕑 Horario de atención<br>
-    Lun a Sáb: 6:45 am – 7:20 pm
-  </div>
+<div class="titulo">
+🕑 Horario de atención<br>
+Lun a Sáb: 6:45 am – 7:20 pm
+</div>
 
-  <div class="titulo">----------------------</div>
+<div class="titulo">----------------------</div>
 
-  <div class="item">Consecutivo: <span id="Indice"></span></div>
-  <div class="item">Placa: <span id="placa"></span></div>
-  <div class="item">P/C: <span id="p_c"></span></div>
-  <div class="item">Ingreso: <span id="ingreso"></span></div>
+<div class="item">Consecutivo: <span id="INDICE"></span></div>
+<div class="item">Mensualidad: <span id="Id_mensualidad"></span></div>
+<div class="item">Placa: <span id="Placapm"></span></div>
+<div class="item">Nombre: <span id="NOMBRE_CLIENTE"></span></div>
+<div class="item">Fecha Inicial: <span id="Fechai_nicial"></span></div>
+<div class="item">Mes: <span id="MES"></span></div>
+<div class="item">Estado: <span id="Estado"></span></div>
+<div class="item">Valor: <span id="Valor"></span></div>
 
-  <!-- SOLO SI VIENE NOMBRE -->
-  <div class="item" id="rowNombre">
-    Nombre: <span id="nombre"></span>
-  </div>
+<div class="titulo">----------------------</div>
 
-  <div class="item">Salida: <span id="salida"></span></div>
-  <div class="item">Precio: <span id="precio"></span></div>
+<div class="barcode-container">
+<svg id="barcode"></svg>
+</div>
 
-  <div class="titulo">----------------------</div>
+<div class="item">
+<strong>Total: $<span id="Total"></span></strong>
+</div>
 
-  <div class="barcode-container">
-    <svg id="barcode"></svg>
-  </div>
+<div class="linea"></div>
 
-  <div class="item"><strong>Total:</strong> <span id="total"></span></div>
-
-  <div class="linea"></div>
-
-  <div class="pie">
-    <strong>AVISO IMPORTANTE</strong>
-    <div>1. Entrega solo con recibo.</div>
-    <div>2. El parqueadero no responde por daños o pérdidas.</div>
-    <div>3. Retirada la moto no se aceptan reclamos.</div>
-  </div>
+<div class="pie">
+<strong>AVISO IMPORTANTE</strong>
+<div>1. Entrega solo con recibo.</div>
+<div>2. El parqueadero no responde por daños o pérdidas.</div>
+<div>3. Retirada la moto no se aceptan reclamos.</div>
+</div>
 
 </div>
 
 <script>
-function cargarDatosYImprimir() {
-  const p = new URLSearchParams(window.location.search);
 
-  const set = (id, val) => {
-    const e = document.getElementById(id);
-    if (e) e.textContent = val || "";
-  };
+function cargarDatosYImprimir(){
 
-  set("nombreSucursal", p.get("sucursalp") ? "Sucursal " + p.get("sucursalp") : "");
-  set("direccionSucursal", p.get("dirsucur") ? "DIR: " + p.get("dirsucur") : "");
-  set("telefonoSucursal", p.get("phone") ? "TEL: " + p.get("phone") : "");
+const p=new URLSearchParams(window.location.search);
 
-  set("Indice", p.get("indice"));
-  set("placa", p.get("placa"));
-  set("p_c", p.get("p_c"));
-  set("ingreso", p.get("ingreso"));
-  set("nombre", p.get("nombre"));
-  set("salida", p.get("salida"));
-  set("precio", p.get("precio_parqueo"));
-  set("total", p.get("total"));
+const set=(id,val)=>{
+const e=document.getElementById(id);
+if(e)e.textContent=val||"";
+};
 
-  if (!p.get("nombre")) {
-    document.getElementById("rowNombre").style.display = "none";
-  }
+set("INDICE",p.get("INDICE"));
+set("Id_mensualidad",p.get("Id_mensualidad"));
+set("Placapm",p.get("Placapm"));
+set("NOMBRE_CLIENTE",p.get("NOMBRE_CLIENTE"));
+set("Fechai_nicial",p.get("Fechai_nicial"));
+set("MES",p.get("MES"));
+set("Estado",p.get("Estado"));
+set("Valor",p.get("Valor"));
+set("Total",p.get("Valor"));
 
-  try {
-    JsBarcode("#barcode", p.get("placa") || "SINPLACA", {
-      format: "CODE128",
-      width: 2,
-      height: 50,
-      displayValue: false
-    });
-  } catch {}
+set("sucursal",p.get("SUCU")?"Sucursal "+p.get("SUCU"):"");
+set("direccion",p.get("D_SUC")?"DIR: "+p.get("D_SUC"):"");
 
-  setTimeout(() => window.print(), 100);
+try{
+JsBarcode("#barcode",p.get("Placapm")||"SINPLACA",{
+format:"CODE128",
+width:2,
+height:50,
+displayValue:false
+});
+}catch(e){}
+
+setTimeout(()=>window.print(),100);
+
 }
+
 </script>
 
 </body>
